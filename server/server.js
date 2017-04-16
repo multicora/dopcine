@@ -21,16 +21,18 @@ module.exports = function () {
   let server = startServer();
 
   migrations(dal).then( () => {
+    return registerLoging(server);
+  }).then( () => {
     return runServer(server);
   }).then( () => {
   //   return registerACL(server);
   // }).then( () => {
-  //   return registerStaticFilesServer(server);
-  // }).then( () => {
+    return registerStaticFilesServer(server);
+  }).then( () => {
   //   return registerAuth(server, dal);
   // }).then( () => {
-  //   return registerRouting(server, dal);
-  // }).then( () => {
+    return registerRouting(server, dal);
+  }).then( () => {
     showSuccessMessage(server);
   }).catch( err => {
     let parsedError = parseError(err);
@@ -43,6 +45,32 @@ module.exports = function () {
     console.error(err);
   });
 };
+
+function registerLoging(server) {
+  return new Promise(function (resolve, reject) {
+    const Good = require('good');
+    server.register({
+      register: Good,
+      options: {
+        reporters: {
+          console: [{
+            module: 'good-squeeze',
+            name: 'Squeeze',
+            args: [{
+              response: '*',
+              log: '*',
+              error: '*'
+            }]
+          }, {
+            module: 'good-console'
+          }, 'stdout']
+        }
+      }
+    }, function (err) {
+      err ? reject() : resolve();
+    });
+  });
+}
 
 function parseError(err) {
   const dbConnectionProblem = /ECONNREFUSED .*:3306/;
@@ -72,21 +100,21 @@ function migrations(DAL) {
   return migrations(DAL);
 }
 
-// function registerStaticFilesServer(server) {
-//   return new Promise(
-//     function (resolve, reject) {
-//       const plugin = require('inert');
-//       server.register(plugin, function (err) {
-//         err ? reject() : resolve();
-//       });
-//     }
-//   );
-// }
+function registerStaticFilesServer(server) {
+  return new Promise(
+    function (resolve, reject) {
+      const plugin = require('inert');
+      server.register(plugin, function (err) {
+        err ? reject() : resolve();
+      });
+    }
+  );
+}
 
-// function registerRouting(server, DAL) {
-//   const routing = require('./routing');
-//   routing.init(server, DAL);
-// }
+function registerRouting(server, DAL) {
+  const routing = require('./routing/routing.js');
+  routing(server, DAL);
+}
 
 function registerDAL(db) {
   return require('./dal/dal.js')(db);

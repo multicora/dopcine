@@ -25,7 +25,8 @@ var config = {
   },
   storage: {
     accountId: '',
-    applicationKey: ''
+    applicationKey: '',
+    bucketId: ''
   }
 };
 
