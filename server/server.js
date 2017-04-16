@@ -1,22 +1,12 @@
 'use strict';
 
-// // External
 // const _ = require('lodash');
 const Promise = require('promise');
-// const fs = require('fs');
-
-// // Internal
 const config = require('./config.js');
 // const migrations = require('./migrations/migrations');
 
-// function logError(error) {
-//   console.log(' ======================= uncaughtException:');
-//   console.log(error.stack);
-// }
-
 module.exports = function () {
   const dataBaseConnection = require('./dataBaseConnection.js');
-
 
   // // ssl supporting
   // const tls = require('./tls.js');
@@ -31,8 +21,16 @@ module.exports = function () {
   let server = startServer();
 
   migrations(dal).then( () => {
-    return run(server);
+    return runServer(server);
   }).then( () => {
+  //   return registerACL(server);
+  // }).then( () => {
+  //   return registerStaticFilesServer(server);
+  // }).then( () => {
+  //   return registerAuth(server, dal);
+  // }).then( () => {
+  //   return registerRouting(server, dal);
+  // }).then( () => {
     showSuccessMessage(server);
   }).catch( err => {
     let parsedError = parseError(err);
@@ -44,25 +42,6 @@ module.exports = function () {
 
     console.error(err);
   });
-
-
-
-
-  
-    // function(DAL) {
-    //   _.bind(registerACL, null, server)
-    //   ).then(
-    //     _.bind(registerStaticFilesServer, null, server)
-    //   ).then(
-    //     _.bind(registerAuth, null, server, DAL)
-    //   ).then(
-    //     _.bind(registerRouting, null, server, DAL)
-    //   ).then(
-    //   );
-    // },
-    // function (err) {
-    //   logError(err);
-    // }
 };
 
 function parseError(err) {
@@ -78,10 +57,6 @@ function parseError(err) {
 function startServer(tls) {
   const Hapi = require('hapi');
 
-  // const params = Object.assign({
-  //   tls: null,
-  //   dal: null
-  // }, params);
   const server = new Hapi.Server();
 
   server.connection({
@@ -131,7 +106,7 @@ function showSuccessMessage(server) {
   console.log('Server running at: ' + server.info.uri);
 }
 
-function run(server) {
+function runServer(server) {
   return new Promise(
     function (resolve, reject) {
       server.start((err) => {

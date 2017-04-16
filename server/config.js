@@ -22,6 +22,10 @@ var config = {
   mailGun: {
     apiKey: '',
     domain: ''
+  },
+  storage: {
+    accountId: '',
+    applicationKey: ''
   }
 };
 
