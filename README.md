@@ -16,7 +16,8 @@ Required properties
   },
   storage: {
     accountId: <accountId>,
-    applicationKey: <applicationKey>
+    applicationKey: <applicationKey>,
+    bucketId: <bucketId>
   }
 }
 ```

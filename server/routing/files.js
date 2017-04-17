@@ -12,7 +12,7 @@ module.exports = function (server, DAL) {
       payload: {
         output: 'stream',
         parse: true,
-        // maxBytes: 2e+8, // 200Mb
+        maxBytes: 5e+9, // 5000Mb
         // allow: 'multipart/form-data'
       },
       // auth: 'simple',
