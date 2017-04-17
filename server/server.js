@@ -23,6 +23,8 @@ module.exports = function () {
   migrations(dal).then( () => {
     return registerLoging(server);
   }).then( () => {
+    return registerDocumentation(server);
+  }).then( () => {
     return runServer(server);
   }).then( () => {
   //   return registerACL(server);
@@ -105,6 +107,27 @@ function registerStaticFilesServer(server) {
     function (resolve, reject) {
       const plugin = require('inert');
       server.register(plugin, function (err) {
+        err ? reject() : resolve();
+      });
+    }
+  );
+}
+
+function registerDocumentation(server) {
+  return new Promise(
+    function (resolve, reject) {
+      server.register([
+        require('vision'),
+        require('inert'),
+        {
+          register: require('hapi-swagger'),
+          options: {
+            tags: [
+                { name: 'api' }
+            ],
+          }
+        }
+      ], function (err) {
         err ? reject() : resolve();
       });
     }

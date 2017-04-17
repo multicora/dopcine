@@ -9,6 +9,9 @@ module.exports = function (server, DAL) {
     method: 'POST',
     path: '/api/file',
     config: {
+      description: 'Upload file',
+      notes: 'Upload file to the storage, max sze 5Gb',
+      tags: ['api'],
       payload: {
         output: 'stream',
         parse: true,
@@ -18,38 +21,21 @@ module.exports = function (server, DAL) {
       // auth: 'simple',
 
       handler: function (request, reply) {
-        console.log('=-=');
-        require('../services/storage.js')(DAL).then( storage => {
-          // let user = request.auth.credentials;
-          let name;
-          // if (request.payload.name) {
-          //   name = request.payload.name;
-          // } else {
-            name = request.payload.file.hapi.filename;
-          // }
-          // videoCtrl.saveFile(
-          //   name,
-          //   user.id,
-          //   request.payload.file._data
-          // ).then(
-          //   function () {
-          //     reply();
-          //   },
-          //   function (err) {
-          //     console.log('Error:');
-          //     console.log(new Error(err));
-          //     reply(Boom.badImplementation(500, err));
-          //   }
-          // );
-          return storage.addFile(request.payload.file._data, name, 'test', 'test');
-        }).then( res => {
-          // console.log('reply');
-          // console.log(res);
-          reply();
-        }).catch( err => {
-          console.error(err);
-          reply(err);
-        });
+        if (!request.payload.file) {
+          reply( Boom.badRequest('Property "file" is absent') );
+        } else {
+          require('../services/storage.js')(DAL).then( storage => {
+            let name = request.payload.file.hapi.filename;
+
+            return storage.addFile(request.payload.file._data, name, 'test', 'test');
+          }).then( () => {
+            reply();
+          }).catch( err => {
+            console.error(err);
+            reply(err);
+          });
+        }
+        
       }
     }
   });

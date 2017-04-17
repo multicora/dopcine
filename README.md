@@ -8,7 +8,7 @@
 Create `/server/userConfig.js` file that exports JSON. It will be merged with default config.
 
 Required properties
-```javascript
+```json
 {
   mailGun: {
     apiKey: <apiKey>,
@@ -21,3 +21,7 @@ Required properties
   }
 }
 ```
+
+## Documentation
+Tool: `https://github.com/glennjones/hapi-swagger`
+Documentation is available by path `/documentation`
