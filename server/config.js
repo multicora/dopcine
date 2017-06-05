@@ -1,6 +1,7 @@
 'use strict';
 
-var userConfig;
+const merge = require('merge');
+let userConfig;
 
 try {
   userConfig = require('./userConfig.js');
@@ -8,7 +9,7 @@ try {
   userConfig = {};
 }
 
-var config = {
+const config = {
   db: {
     dbName: 'dopcine',
     host: 'localhost',
@@ -30,4 +31,4 @@ var config = {
   }
 };
 
-module.exports = Object.assign({}, config, userConfig);
+module.exports = merge.recursive(config, userConfig);
