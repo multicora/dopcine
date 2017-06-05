@@ -22,6 +22,12 @@ Required properties
 }
 ```
 
+## Run backend
+```
+cd server
+node index.js
+```
+
 ## Documentation
 Tool: `https://github.com/glennjones/hapi-swagger`
 Documentation is available by path `/documentation`
