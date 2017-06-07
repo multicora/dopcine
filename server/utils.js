@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = {
-  // newToken: () => {
-  //   const RandToken = require('rand-token');
+  newToken: () => {
+    const RandToken = require('rand-token');
 
-  //   return RandToken.generate(16);
-  // },
+    return RandToken.generate(16);
+  },
 
   getServerUrl: request => {
     let server = request.server;
