@@ -125,6 +125,7 @@ function registerDocumentation(server) {
             tags: [
                 { name: 'api' }
             ],
+            grouping: 'tags',
           }
         }
       ], function (err) {

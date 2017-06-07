@@ -8,6 +8,7 @@ module.exports = function (DAL) {
     getDbVersion: getDbVersion,
     migrations: [
       require('./scripts/v001.js')(DAL),
+      require('./scripts/v002.js')(DAL),
     ]
   };
 
