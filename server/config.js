@@ -24,6 +24,10 @@ const config = {
     apiKey: '',
     domain: ''
   },
+  mail: {
+    defaultFrom: '',
+    defaultSubject: 'Dopcine'
+  },
   storage: {
     accountId: '',
     applicationKey: '',
@@ -31,4 +35,18 @@ const config = {
   }
 };
 
-module.exports = merge.recursive(config, userConfig);
+const fullConfig = merge.recursive(config, userConfig);
+
+validate(fullConfig);
+
+module.exports = fullConfig;
+
+function validate(conf) {
+  !conf.mailGun.apiKey && showError('"config.mailGun.apiKey" key should be exist and not empty');
+  !conf.mailGun.domain && showError('"config.mailGun.domain" key should be exist and not empty');
+  !conf.mail.defaultFrom && showError('"config.mail.defaultFrom" key should be exist and not empty');
+}
+
+function showError(msg) {
+  throw new Error(msg);
+}

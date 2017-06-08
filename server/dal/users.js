@@ -1,6 +1,12 @@
 module.exports = function(connection) {
   const sqlBuilder = require('../services/sqlBuilder.js');
 
+  function parse(user) {
+    delete user.password;
+
+    return user;
+  }
+
   return {
     getUserForLogin: (login) => {
       let request = sqlBuilder
@@ -13,22 +19,32 @@ module.exports = function(connection) {
         return res.length && res[0] || null;
       });
     },
-    // register: (email, password, company) => {
-    //   return new Promise((resolve, reject) => {
-    //     password = passwordHash.generate(password);
 
-    //     const request = sqlBuilder.insert()
-    //       .into('users')
-    //       .set('email', email)
-    //       .set('password', password)
-    //       .set('company', company)
-    //       .toString();
+    getUserByEmail: (email) => {
+      let request = sqlBuilder
+        .select()
+        .from('users')
+        .where(`email = '${email}'`)
+        .toString();
 
-    //     connection.query(request, (err, response) => {
-    //       err ? reject(err) : resolve(response[0]);
-    //     });
-    //   });
-    // },
+      return connection.query(request).spread((res) => {
+        return res.length && parse(res[0]) || null;
+      });
+    },
+
+    register: (email, passwordHash) => {
+      const request = sqlBuilder.insert()
+        .into('users')
+        .set('email', email)
+        .set('password', passwordHash)
+        .set('cratedAt', sqlBuilder.str('NOW()'))
+        .set('updatedAt', sqlBuilder.str('NOW()'))
+        .toString();
+
+      return connection.query(request).spread((res) => {
+        return res;
+      });
+    },
 
     /** -----------
      *  Migrations

@@ -2,10 +2,9 @@
 const passwordHash = require('password-hash');
 // const Promise = require('promise');
 const keys = require('../responseKeys.js');
-// const mailer = require('../services/mailer.js');
-// const config = require('../config.js');
+const mailer = require('../services/mailer.js');
 const utils = require('../utils.js');
-// const templates = require('../services/templates.js')();
+const templates = require('../services/templates.js')();
 
 // const EMAIL_IS_NOT_CONFIRMED = 'EMAIL_IS_NOT_CONFIRMED';
 // const USERNAME_OR_PASSWORD_IS_INCORRECT = 'USERNAME_OR_PASSWORD_IS_INCORRECT';
@@ -37,7 +36,7 @@ module.exports = function (DAL) {
           });
         } else {
           token = utils.newToken();
-          result = DAL.users.updateToken(token, login);
+          result = DAL.users.updateToken(token, login); // TODO
         }
 
         return result;
@@ -46,7 +45,7 @@ module.exports = function (DAL) {
           token: token,
         };
       });
-    }
+    },
 
     // verifyPassword: verifyPassword,
 
@@ -82,51 +81,54 @@ module.exports = function (DAL) {
     //   });
     // },
 
-    // isUserExist: (email) => {
-    //   return new Promise((resolve) => {
-    //     DAL.users.getUserByEmail(email).then(() => {
-    //       resolve(true);
-    //     }, () => {
-    //       resolve(false);
-    //     });
-    //   });
-    // },
+    register: (email, password, confirmPassword, emailLink) => {
+      const confirmToken = utils.newToken();
+      const link = emailLink + confirmToken;
+      let result;
 
-    // register: (email, password, confirmPassword, confirmToken, link) => {
-    //   return new Promise((resolve, reject) => {
-    //     if (confirmPassword !== password) {
-    //       reject({
-    //         'statusCode': 400,
-    //         'message': 'Passwords do not match!'
-    //       });
-    //     } else {
-    //       DAL.company.add().then((res) => {
-    //         return DAL.users.register(email, password, res.insertId);
-    //       }).then(() => {
-    //         return DAL.users.addConfirmToken(confirmToken, email);
-    //       }).then(() => {
-    //         return templates.registration(link);
-    //       }).then((template) => {
-    //         const mail = {
-    //           to: email,
-    //           subject: 'Register',
-    //           text: template.text,
-    //           html: template.html
-    //         };
+      return DAL.users.getUserByEmail(email).then((user) => {
+        // Check user
+        const result = user ? Promise.reject({
+          key: keys.AUTH.EMAIL_ALREADY_IN_USE,
+          type: 400
+        }) : Promise.resolve();
 
-    //         mailer(config).send(mail).then(
-    //           () => {
-    //             resolve();
-    //           }, (err) => {
-    //             reject(err);
-    //           }
-    //         );
-    //       }, (err) => {
-    //         reject(err);
-    //       });
-    //     }
-    //   });
-    // },
+        return result;
+      }).then(() => {
+        // Check passwords
+        const passwordsMach = confirmPassword === password;
+        const result = !passwordsMach ? Promise.reject({
+          type: 400,
+          key: keys.AUTH.PASSWORDS_DO_NOT_MATCH,
+        }) : Promise.resolve();
+
+        return result;
+      }).then(() => {
+        // Create user
+        const hash = passwordHash.generate(password);
+
+        return DAL.users.register(email, hash);
+      }).then((res) => {
+        // Add token
+
+        return DAL.tokens.create(confirmToken, res.insertId, DAL.tokens.TYPES.RESET);
+      }).then(() => {
+        // Ask template
+        return templates.registration(link);
+      }).then((template) => {
+        // Ask template
+        const mail = {
+          to: email,
+          subject: 'Dopcine: register',
+          text: template.text,
+          html: template.html
+        };
+
+        return mailer().send(mail);
+      }).then(() => {
+        return;
+      });
+    },
 
     // inviteUser: (email) => {
     //   return new Promise((resolve, reject) => {
@@ -223,4 +225,15 @@ module.exports = function (DAL) {
   function verifyPassword(password, passwordForVerify) {
     return !!password && passwordHash.verify(password, passwordForVerify);
   }
+
+
+  // function isUserExist(email) => {
+  //   return new Promise((resolve) => {
+  //     DAL.users.getUserByEmail(email).then(() => {
+  //       resolve(true);
+  //     }, () => {
+  //       resolve(false);
+  //     });
+  //   });
+  // }
 };
