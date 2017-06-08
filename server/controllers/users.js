@@ -16,34 +16,62 @@ module.exports = function (DAL) {
     login: (login, password) => {
       let token;
 
-      return DAL.users.getUserForLogin(login).then((response) => {
-        let result;
-
-        if (!response) {
-          result = Promise.reject({
-            key: keys.AUTH.USERNAME_OR_PASSWORD_IS_INCORRECT,
-            type: 401
-          });
-        } else if (!response.confirmed) {
-          result = Promise.reject({
-            key: keys.AUTH.EMAIL_IS_NOT_CONFIRMED,
-            type: 401
-          });
-        } else if (!verifyPassword(password, response.password)) {
-          result = Promise.reject({
-            key: keys.AUTH.USERNAME_OR_PASSWORD_IS_INCORRECT,
-            type: 401
-          });
-        } else {
-          token = utils.newToken();
-          result = DAL.users.updateToken(token, login); // TODO
-        }
+      return DAL.users.getUserForLogin(login).then((user) => {
+        // Check user
+        const result = !user ? Promise.reject({
+          key: keys.AUTH.USERNAME_OR_PASSWORD_IS_INCORRECT,
+          type: 401
+        }) : Promise.resolve(user);
 
         return result;
-      }).then(() => {
-        return {
-          token: token,
-        };
+      }).then((user) => {
+        // Check if user confirm his email
+        const result = !user.confirmed ? Promise.reject({
+          key: keys.AUTH.EMAIL_IS_NOT_CONFIRMED,
+          type: 401
+        }) : Promise.resolve(user);
+
+        return result;
+      }).then((user) => {
+        // Verifying password
+        const passwordIsCorrect = verifyPassword(password, user.password);
+        const result = !passwordIsCorrect ? Promise.reject({
+          key: keys.AUTH.USERNAME_OR_PASSWORD_IS_INCORRECT,
+          type: 401
+        }) : Promise.resolve(user);
+
+        return result;
+      }).then((user) => {
+        // Generating token
+        const token = utils.newToken();
+
+        return DAL.tokens.create(
+          token,
+          user.id,
+          DAL.tokens.TYPES.AUTH
+        ).then(() => {
+          return token;
+        });
+      });
+    },
+
+    confirmEmail: (token) => {
+      return DAL.tokens.get(token).then((tokenObj) => {
+        // Check token
+        const result = !tokenObj ? Promise.reject({
+          key: keys.AUTH.TOKEN_IS_INCORRECT,
+          type: 401
+        }) : Promise.resolve(tokenObj);
+
+        return result;
+      }).then((tokenObj) => {
+        // Get user
+        return DAL.users.getUserById(tokenObj.user);
+      }).then((user) => {
+        // Update user
+        user.confirmed = true;
+
+        return DAL.users.update(user);
       });
     },
 
@@ -110,7 +138,6 @@ module.exports = function (DAL) {
         return DAL.users.register(email, hash);
       }).then((res) => {
         // Add token
-
         return DAL.tokens.create(confirmToken, res.insertId, DAL.tokens.TYPES.RESET);
       }).then(() => {
         // Ask template

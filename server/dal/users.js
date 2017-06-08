@@ -32,6 +32,18 @@ module.exports = function(connection) {
       });
     },
 
+    getUserById: (id) => {
+      let request = sqlBuilder
+        .select()
+        .from('users')
+        .where(`id = '${id}'`)
+        .toString();
+
+      return connection.query(request).spread((res) => {
+        return res.length && parse(res[0]) || null;
+      });
+    },
+
     register: (email, passwordHash) => {
       const request = sqlBuilder.insert()
         .into('users')
@@ -39,6 +51,23 @@ module.exports = function(connection) {
         .set('password', passwordHash)
         .set('cratedAt', sqlBuilder.str('NOW()'))
         .set('updatedAt', sqlBuilder.str('NOW()'))
+        .toString();
+
+      return connection.query(request).spread((res) => {
+        return res;
+      });
+    },
+
+    update: (user) => {
+      const id = user.id;
+      delete user.id;
+      delete user.email;
+      delete user.cratedAt;
+      const request = sqlBuilder.update()
+        .table('users')
+        .setFields(parse(user))
+        .set('updatedAt', sqlBuilder.str('NOW()'))
+        .where(`id = ${id}`)
         .toString();
 
       return connection.query(request).spread((res) => {

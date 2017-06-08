@@ -30,7 +30,38 @@ module.exports = function (server, DAL) {
         const user = request.payload;
 
         usersController.login(user.login, user.password).then((res) => {
-          reply(res);
+          reply({
+            token: res
+          });
+        }).catch((err) => {
+          if (err.type === 401) {
+            reply(Boom.unauthorized(err.key));
+          } else {
+            reply(Boom.badImplementation(err));
+          }
+        });
+      }
+    }
+  });
+
+  // POST: /api/confirm-email
+  server.route({
+    method: 'POST',
+    path: '/api/confirm-email',
+    config: {
+      description: 'Email confirmation',
+      notes: 'Email confirmation with token',
+      tags: ['api', 'users'],
+      validate: {
+        payload: {
+          token: Joi.string().required()
+        }
+      },
+      handler: function (request, reply) {
+        const token = request.payload.token;
+
+        usersController.confirmEmail(token).then(() => {
+          reply();
         }).catch((err) => {
           if (err.type === 401) {
             reply(Boom.unauthorized(err.key));
