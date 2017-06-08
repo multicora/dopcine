@@ -3,6 +3,7 @@
 module.exports = function (server, DAL) {
   const Boom = require('boom');
   const Joi = require('joi');
+  const utils = require('../utils.js');
 
   const usersController = require('../controllers/users.js')(DAL);
 
@@ -33,6 +34,40 @@ module.exports = function (server, DAL) {
         }).catch((err) => {
           if (err.type === 401) {
             reply(Boom.unauthorized(err.key));
+          } else {
+            reply(Boom.badImplementation(err));
+          }
+        });
+      }
+    }
+  });
+
+  // POST: /api/register
+  server.route({
+    method: 'POST',
+    path: '/api/register',
+    config: {
+      description: 'Register',
+      notes: 'Register new user',
+      tags: ['api', 'users'],
+      validate: {
+        payload: {
+          email: Joi.string().email().required(),
+          password: Joi.string().required(),
+          confirmPassword: Joi.string().required(),
+        }
+      },
+      handler: function (request, reply) {
+        const email = request.payload.email;
+        const password = request.payload.password;
+        const confirmPassword = request.payload.confirmPassword;
+        const emailLink = utils.getServerUrl(request) + '/login/';
+
+        usersController.register(email, password, confirmPassword, emailLink).then(() => {
+          reply();
+        }).catch((err) => {
+          if (err.type === 400) {
+            reply(Boom.badRequest(err.key));
           } else {
             reply(Boom.badImplementation(err));
           }
