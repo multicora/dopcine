@@ -10,7 +10,8 @@ module.exports = function(connection) {
 
   return {
     TYPES: {
-      RESET: 'reset'
+      RESET: 'reset',
+      AUTH: 'auth',
     },
     create: (token, userId, type) => {
       const request = sqlBuilder.insert()
@@ -27,6 +28,17 @@ module.exports = function(connection) {
       });
     },
 
+    get: (token) => {
+      let request = sqlBuilder
+        .select()
+        .from('tokens')
+        .where(`value = '${token}'`)
+        .toString();
+
+      return connection.query(request).spread((res) => {
+        return res.length && res[0] || null;
+      });
+    },
 
     /** -----------
      *  Migrations
