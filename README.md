@@ -8,8 +8,8 @@
 Create `/server/userConfig.js` file that exports JSON. It will be merged with default config.
 
 Required properties
-```json
-{
+```javascript
+module.exports = {
   mailGun: {
     apiKey: <apiKey>,
     domain: <domain>
@@ -19,6 +19,22 @@ Required properties
     applicationKey: <applicationKey>,
     bucketId: <bucketId>
   }
+  db: {
+    user: <user name>,
+    password: <password>
+  },
+  server: {
+    port: <port>
+  },
+  mail: {
+    defaultFrom: <email address>
+  }
+};
+
+
+
+
+
 }
 ```
 
