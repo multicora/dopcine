@@ -30,12 +30,6 @@ module.exports = {
     defaultFrom: <email address>
   }
 };
-
-
-
-
-
-}
 ```
 
 ## Run backend
