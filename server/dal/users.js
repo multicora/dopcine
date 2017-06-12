@@ -1,61 +1,85 @@
 module.exports = function(connection) {
-  var Sequelize = require('sequelize');
+  const sqlBuilder = require('../services/sqlBuilder.js');
 
-  var model = connection.define('users', {
-    id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      unique: true,
-      autoIncrement: true,
-      primaryKey: true
-    },
-    firstName:{
-      type: Sequelize.STRING
-    },
-    secondName:{
-      type: Sequelize.STRING
-    },
-    email:{
-      type: Sequelize.STRING,
-      unique: true
-    },
-    password:{
-      type: Sequelize.STRING
-    },
-    permanent: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    },
-    blocked: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    },
-    cratedAt: {
-      type: Sequelize.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.NOW
-    },
-    updatedAt: {
-      type: Sequelize.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.NOW
-    }
-  }, {
-    // don't add the timestamp attributes (updatedAt, createdAt)
-    timestamps: false,
+  function parse(user) {
+    delete user.password;
 
-    // disable the modification of table names; By default, sequelize will automatically
-    // transform all passed model names (first parameter of define) into plural.
-    // if you don't want that, set the following
-    freezeTableName: true
-  });
+    return user;
+  }
 
   return {
-    model: model,
+    getUserForLogin: (login) => {
+      let request = sqlBuilder
+        .select()
+        .from('users')
+        .where(`email = '${login}'`)
+        .toString();
 
-    // For migrations
+      return connection.query(request).spread((res) => {
+        return res.length && res[0] || null;
+      });
+    },
+
+    getUserByEmail: (email) => {
+      let request = sqlBuilder
+        .select()
+        .from('users')
+        .where(`email = '${email}'`)
+        .toString();
+
+      return connection.query(request).spread((res) => {
+        return res.length && parse(res[0]) || null;
+      });
+    },
+
+    getUserById: (id) => {
+      let request = sqlBuilder
+        .select()
+        .from('users')
+        .where(`id = '${id}'`)
+        .toString();
+
+      return connection.query(request).spread((res) => {
+        return res.length && parse(res[0]) || null;
+      });
+    },
+
+    register: (email, passwordHash) => {
+      const request = sqlBuilder.insert()
+        .into('users')
+        .set('email', email)
+        .set('password', passwordHash)
+        .set('cratedAt', sqlBuilder.str('NOW()'))
+        .set('updatedAt', sqlBuilder.str('NOW()'))
+        .toString();
+
+      return connection.query(request).spread((res) => {
+        return res;
+      });
+    },
+
+    update: (user) => {
+      const id = user.id;
+      delete user.id;
+      delete user.email;
+      delete user.cratedAt;
+      const request = sqlBuilder.update()
+        .table('users')
+        .setFields(parse(user))
+        .set('updatedAt', sqlBuilder.str('NOW()'))
+        .where(`id = ${id}`)
+        .toString();
+
+      return connection.query(request).spread((res) => {
+        return res;
+      });
+    },
+
+    /** -----------
+     *  Migrations
+     *  -----------
+     */
+
     createTable: () => {
       let request = [
         'CREATE TABLE ',
@@ -75,6 +99,17 @@ module.exports = function(connection) {
       ].join('');
 
       return connection.query(request);
-    }
+    },
+
+    addColumnConfirmed: function () {
+      const request = [
+        'ALTER TABLE `users` ',
+        'ADD `confirmed` BOOLEAN ',
+        'NOT NULL ',
+        'DEFAULT FALSE;'
+      ].join('');
+
+      return connection.query(request);
+    },
   };
 };

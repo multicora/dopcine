@@ -30,6 +30,6 @@ module.exports = function (server, DAL) {
   });
 
   require('./files.js')(server, DAL);
-  // require('./routing/users.js')(server, DAL);
+  require('./users.js')(server, DAL);
   // require('./routing/conversations.js')(server, DAL);
 };
