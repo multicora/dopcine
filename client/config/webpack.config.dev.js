@@ -256,3 +256,5 @@ module.exports = {
     hints: false,
   },
 };
+
+console.log(process.env.PORT);

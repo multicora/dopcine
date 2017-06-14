@@ -14,7 +14,7 @@ class Form extends Component {
   }
 
   __onFormChange(form) {
-    typeof(this.props.onFormChange) == "function" && this.props.onFormChange({
+    typeof(this.props.onFormChange) === "function" && this.props.onFormChange({
       ...form,
       formName: this.props.name
     });

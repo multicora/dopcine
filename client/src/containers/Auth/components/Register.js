@@ -15,10 +15,10 @@ const Login = props => {
         name="firstName"
         hintText="First name"
         floatingLabelText="First name"
-        errorText={props.error}
+        errorText={props.requestError || props.error}
         value={props.firstName || ""}
         onChange={ props.onChange || (() => {}) }
-        pattern={"^[a-zA-Z0-9]{2,}$"}
+        pattern={/^[a-zA-Z0-9]{2,}$/}
         required/>
       <MaterialInput
         id="lastName"
@@ -28,7 +28,7 @@ const Login = props => {
         errorText={props.error}
         value={props.lastName || ""}
         onChange={ props.onChange || (() => {}) }
-        pattern={"^[a-zA-Z0-9]{6,}$"}
+        pattern={/^[a-zA-Z0-9]{6,}$/}
         required/>
       <MaterialInput
         id="email"
@@ -38,7 +38,7 @@ const Login = props => {
         errorText={props.error}
         value={props.email || ""}
         onChange={ props.onChange || (() => {}) }
-        pattern={"^[a-zA-Z0-9]{2,}$"}
+        pattern={/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/}
         required/>
       <MaterialInput
         id="password"
@@ -48,7 +48,17 @@ const Login = props => {
         errorText={props.error}
         value={props.password || ""}
         onChange={ props.onChange || (() => {}) }
-        pattern={"^[a-zA-Z0-9]{6,}$"}
+        pattern={/^[a-zA-Z0-9]{6,}$/}
+        required/>
+      <MaterialInput
+        id="confirmPassword"
+        name="confirmPassword"
+        hintText="Confirm password"
+        floatingLabelText="Confirm password"
+        errorText={props.error}
+        value={props.confirmPassword || ""}
+        onChange={ props.onChange || (() => {}) }
+        pattern={/^[a-zA-Z0-9]{6,}$/}
         required/>
       </div>
   );

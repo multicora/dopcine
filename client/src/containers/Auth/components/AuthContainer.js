@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Login from './Login';
 import Register from './Register';
-import Form from 'components/Form';
+import Form from 'components/Form/Form';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -10,7 +10,9 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {
   selectTab,
-} from '../../../modules/auth'
+  register,
+  login
+} from 'modules/auth'
 
 const containerStyles = {
   "display": "flex",
@@ -55,11 +57,18 @@ class AuthContainer extends Component {
   }
 
   __onFormSubmit() {
-    console.log("submit");
+    let props = {};
+    let selectedTab = this.props.selectedTab;
+    let formFieds = this.__forms[selectedTab].fields;
+
+    Object.keys(formFieds).forEach((field) =>
+      props[field] = formFieds[field].value
+    );
+    typeof(this.props[selectedTab]) && this.props[selectedTab](props);
   }
 
   render() {
-    let {toggle, selectTab, selectedTab} = this.props;
+    let {toggle, selectTab, selectedTab, requestInProgress, requestError} = this.props;
     let {isFormValid} = this.state;
 
     return (
@@ -69,13 +78,13 @@ class AuthContainer extends Component {
           onChange={selectTab}
         >
           <Tab label="Login" value="login">
-            { selectedTab == "login" && <Form name="login" onFormChange={this.__onFormChange.bind(this)}>
-              <Login styles={ containerStyles }/>
+            { selectedTab === "login" && <Form name="login" onFormChange={this.__onFormChange.bind(this)}>
+              <Login requestError={requestError} styles={ containerStyles }/>
             </Form> }
           </Tab>
           <Tab label="Register" value="register">
-            { selectedTab == "register" && <Form name="register" onFormChange={this.__onFormChange.bind(this)}>
-              <Register styles={ containerStyles }/>
+            { selectedTab === "register" && <Form name="register" onFormChange={this.__onFormChange.bind(this)}>
+              <Register requestError={requestError} styles={ containerStyles }/>
             </Form> }
           </Tab>
         </Tabs>
@@ -86,12 +95,12 @@ class AuthContainer extends Component {
             default={true}
             onTouchTap={toggle}
           />
-          <RaisedButton 
+          <RaisedButton
             label="Submit"
             primary={true}
-            disabled={!isFormValid}
+            disabled={!isFormValid || requestInProgress}
             keyboardFocused={true}
-            onTouchTap={toggle}
+            onTouchTap={this.__onFormSubmit.bind(this)}
           />
         </div>
       </div>
@@ -100,11 +109,15 @@ class AuthContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  selectedTab: state.auth.selectedTab
+  selectedTab: state.auth.selectedTab,
+  requestInProgress: state.auth.requestInProgress,
+  requestError: state.auth.requestError
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  selectTab
+  selectTab,
+  register,
+  login
 }, dispatch)
 
 export default connect(

@@ -17,7 +17,7 @@ module.exports = function (server, DAL) {
       tags: ['api', 'users'],
       validate: {
         payload: {
-          login: Joi.string().required(),
+          email: Joi.string().required(),
           password: Joi.string().required()
         }
       },
@@ -29,7 +29,7 @@ module.exports = function (server, DAL) {
       handler: function (request, reply) {
         const user = request.payload;
 
-        usersController.login(user.login, user.password).then((res) => {
+        usersController.login(user.email, user.password).then((res) => {
           reply({
             token: res
           });
@@ -86,15 +86,19 @@ module.exports = function (server, DAL) {
           email: Joi.string().email().required(),
           password: Joi.string().required(),
           confirmPassword: Joi.string().required(),
+          firstName: Joi.string().required(),
+          lastName: Joi.string().required(),
         }
       },
       handler: function (request, reply) {
         const email = request.payload.email;
         const password = request.payload.password;
         const confirmPassword = request.payload.confirmPassword;
+        const firstName = request.payload.firstName;
+        const lastName = request.payload.lastName;
         const emailLink = utils.getServerUrl(request) + '/login/';
 
-        usersController.register(email, password, confirmPassword, emailLink).then(() => {
+        usersController.register(email, password, confirmPassword, emailLink, firstName, lastName).then(() => {
           reply();
         }).catch((err) => {
           if (err.type === 400) {

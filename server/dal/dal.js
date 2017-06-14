@@ -6,6 +6,9 @@ module.exports = function(connection){
   // Users
   DAL.users = require('./users.js')(connection);
 
+  // Users Details
+  DAL.usersDetails = require('./users-details.js')(connection);
+
   // Settings
   DAL.settings = require('./settings.js')(connection);
 

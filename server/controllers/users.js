@@ -109,7 +109,7 @@ module.exports = function (DAL) {
     //   });
     // },
 
-    register: (email, password, confirmPassword, emailLink) => {
+    register: (email, password, confirmPassword, emailLink, firstName, lastName) => {
       const confirmToken = utils.newToken();
       const link = emailLink + confirmToken;
       let result;
@@ -136,6 +136,12 @@ module.exports = function (DAL) {
         const hash = passwordHash.generate(password);
 
         return DAL.users.register(email, hash);
+      }).then((res) => {
+        // create user details if needed
+        return !!firstName || !!lastName
+          ? DAL.usersDetails.create(res.insertId, firstName, lastName)
+            .then(() => Promise.resolve(res))
+          : Promise.resolve(res);
       }).then((res) => {
         // Add token
         return DAL.tokens.create(confirmToken, res.insertId, DAL.tokens.TYPES.RESET);

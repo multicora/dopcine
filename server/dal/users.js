@@ -86,8 +86,6 @@ module.exports = function(connection) {
         'users ',
         '(',
           'id int(255) NOT NULL AUTO_INCREMENT UNIQUE, ',
-          'firstName varchar(255), ',
-          'secondName varchar(255), ',
           'email varchar(255) UNIQUE, ',
           'password varchar(255), ',
           'permanent BOOLEAN NOT NULL DEFAULT false, ',

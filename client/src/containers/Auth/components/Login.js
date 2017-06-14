@@ -7,7 +7,6 @@ const MaterialInput = makeMaterial(input)
 
 const Login = props => {
 
-
   return (
     <div style={ props.styles }>
       <MaterialInput
@@ -15,10 +14,10 @@ const Login = props => {
         name="email"
         hintText="Email"
         floatingLabelText="Email"
-        errorText={props.error}
+        errorText={props.requestError || props.error}
         value={props.email || ""}
         onChange={ props.onChange || (() => {}) }
-        pattern={"^[a-zA-Z0-9]{2,}$"}
+        pattern={/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/}
         required/>
       <MaterialInput
         id="password"
@@ -28,7 +27,7 @@ const Login = props => {
         errorText={props.error}
         value={props.password || ""}
         onChange={ props.onChange || (() => {}) }
-        pattern={"^[a-zA-Z0-9]{6,}$"}
+        pattern={/^[a-zA-Z0-9]{6,}$/}
         required/>
       </div>
   );

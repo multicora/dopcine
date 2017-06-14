@@ -17,7 +17,7 @@ const config = {
     password: ''
   },
   server: {
-    port: 80, // http
+    port: 8081, // http
     // port: 443 // https
   },
   mailGun: {

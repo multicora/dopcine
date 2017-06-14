@@ -24,8 +24,8 @@ function makeMaterial(WrappedComponent) {
     }
 
     componentWillMount() {
-      typeof(this.context.onFormChange) == "function"
-        && this.context.onFormChange({ name: this.props.name, isValid: !this.__getFormError(this.props) });
+      typeof(this.context.onFormChange) === "function"
+        && this.context.onFormChange({ name: this.props.name, isValid: !this.__getFormError(this.props, this.props.value) });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -34,23 +34,23 @@ function makeMaterial(WrappedComponent) {
     }
 
     componentWillUnmount() {
-      typeof(this.context.onFormUnmount) == "function"
+      typeof(this.context.onFormUnmount) === "function"
         && this.context.onFormUnmount({ name: this.props.name });
     }
 
     __onChange(e) {
       let target = e.target;
-      let error = this.__getFormError(e.target);
+      let error = this.__getFormError(this.props, e.target.value);
 
-      typeof(this.context.onFormChange) == "function"
+      typeof(this.context.onFormChange) === "function"
         && this.context.onFormChange({ name: target.name, isValid: !error, value: target.value });
       this.setState({ error: error, value: target.value });
     }
 
-    __getFormError(props) {
+    __getFormError(props, value) {
       let validations = {
-        required: !props.required || props.required && !!props.value,
-        pattern: !props.pattern || !!props.pattern && (new RegExp(props.pattern)).test(props.value)
+        required: !props.required || props.required && !!value,
+        pattern: !props.pattern || !!props.pattern && (props.pattern).test(value)
       };
 
       return ERRORS[Object.keys(validations).filter(rule => !validations[rule])[0]];
