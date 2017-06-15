@@ -1,31 +1,19 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
-import Auth from 'containers/Auth/Auth.js'
+import RaisedButton from 'material-ui/RaisedButton';
 
-/**
- * A simple example of `AppBar` with an icon on the right.
- * By default, the left icon is a navigation-menu.
- */
-const buttonStyle = {
-  backgroundColor: 'transparent',
-  color: 'white'
-};
-
-const iconElementRight = (
-  <div>
-    <Auth />
+const iconElementRight = (props) =>
+  (<div>
+    <RaisedButton label="Sign In" onTouchTap={props.toggle} />
     <FlatButton label="Save" />
-  </div>
-);
+  </div>);
 
-const Header = () => (
+const Header = (props) => (
   <div>
     <AppBar
       title="Title"
-      iconElementRight={ iconElementRight }
-    >
-    </AppBar>
+      iconElementRight={ iconElementRight(props) }/>
   </div>
 );
 

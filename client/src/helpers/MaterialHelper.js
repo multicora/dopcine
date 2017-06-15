@@ -29,8 +29,8 @@ function makeMaterial(WrappedComponent) {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-      return nextProps.error != this.props.error
-        || nextState.value != this.state.value;
+      return nextProps.errorText !== this.props.errorText
+        || nextState.value !== this.state.value;
     }
 
     componentWillUnmount() {
@@ -49,8 +49,8 @@ function makeMaterial(WrappedComponent) {
 
     __getFormError(props, value) {
       let validations = {
-        required: !props.required || props.required && !!value,
-        pattern: !props.pattern || !!props.pattern && (props.pattern).test(value)
+        required: (!props.required || props.required) && !!value,
+        pattern: (!props.pattern || !!props.pattern) && (props.pattern).test(value)
       };
 
       return ERRORS[Object.keys(validations).filter(rule => !validations[rule])[0]];
@@ -58,12 +58,13 @@ function makeMaterial(WrappedComponent) {
 
     render() {
       let { error, value } = this.state;
+      let { errorText} = this.props;
 
       return <WrappedComponent
         {...this.props}
         value={value}
         onChange={ this.__onChange.bind(this) }
-        errorText={ error }
+        errorText={ errorText || error }
       />;
     }
   }

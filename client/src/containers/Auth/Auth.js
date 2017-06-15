@@ -1,19 +1,17 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
 import AuthContainer from './components/AuthContainer';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {
   toggle,
-} from '../../modules/auth';
+} from 'modules/auth';
 
 const Auth = props => {
 
   return (
     <div>
-      <RaisedButton label="Sign In" onTouchTap={props.toggle} />
       <Dialog
         title="Sign in"
         modal={false}
@@ -27,8 +25,9 @@ const Auth = props => {
 }
 
 const mapStateToProps = state => ({
-  open: state.auth.open
-});
+  open: state.auth.open,
+  routing: state.routing
+}); 
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   toggle

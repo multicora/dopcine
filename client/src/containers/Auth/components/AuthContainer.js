@@ -38,7 +38,7 @@ class AuthContainer extends Component {
 
   componentWillReceiveProps(nextProps) {
     let isNewFormValid = this.__isFormValid(this.__forms[nextProps.selectedTab]);
-    nextProps.selectedTab != this.props.selectedTab && isNewFormValid != this.state.isFormValid
+    nextProps.selectedTab !== this.props.selectedTab && isNewFormValid !== this.state.isFormValid
       && this.setState({isFormValid: isNewFormValid})
   }
 
@@ -48,7 +48,7 @@ class AuthContainer extends Component {
     this.__forms[form.formName].fields[form.name] = form;
 
     let isFormValid = this.__isFormValid(this.__forms[this.props.selectedTab]);
-    isFormValid != this.state.isFormValid &&  this.setState({isFormValid});
+    isFormValid !== this.state.isFormValid &&  this.setState({isFormValid});
   }
 
   __isFormValid(form) {

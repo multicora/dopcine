@@ -1,15 +1,20 @@
 import React from 'react';
-import { Route } from 'react-router-dom'
-import Home from 'containers/Home/Home.js'
+import { Route, Redirect } from 'react-router-dom';
+import Home from 'containers/Home/Home.js';
 
-    // <header>
-    //   <Link to="/">Home</Link>
-    //   <Link to="/about-us">About</Link>
-    // </header>
 export default () => (
   <div>
     <main>
-      <Route exact path="/" component={Home} />
+      <Route path="/" render={(props) =>
+        <Home {...props}>
+          <Route path="/login/:token?" render={(props) => {
+            return (<Redirect to={{
+              pathname: "/",
+              token: props.match.params.token
+            }}/>)
+          }}/>
+        </Home>
+      }/>
     </main>
   </div>
 )

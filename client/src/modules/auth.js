@@ -83,15 +83,20 @@ export const register = ({email, password, confirmPassword, firstName, lastName}
     });
 
     return AuthService.register({email, password, confirmPassword, firstName, lastName})
-     .then(response => {
-        return response.json();
-      })
       .then(response => {
-        dispatch({
-          type: REQUEST_FAILED,
-          error: response.message
-        });
-      }).catch((err) => { console.warn((err).toString()) })
+        if (response.error) {
+          dispatch({
+            type: REQUEST_FAILED,
+            error: response ? response.message : "An error occured in Auth Register call"
+          });
+        } else {
+          dispatch({
+            type: REQUEST_COMPLETED,
+          });
+        }
+      }).catch((err) => {
+        console.warn((err).toString());
+      });
   }
 }
 
@@ -103,13 +108,18 @@ export const login = ({email, password}) => {
 
     return AuthService.login({email, password})
       .then(response => {
-        return response.json();
-      })
-      .then(response => {
-        dispatch({
-          type: REQUEST_FAILED,
-          error: response.message
-        });
-      }).catch((err) => { console.warn((err).toString()); });
+        if (response.error) {
+          dispatch({
+            type: REQUEST_FAILED,
+            error: response ? response.message : "An error occured in Auth Register call"
+          });
+        } else {
+          dispatch({
+            type: REQUEST_COMPLETED,
+          });
+        }
+      }).catch((err) => {
+        console.warn((err.message || err).toString());
+      });
   }
 }
