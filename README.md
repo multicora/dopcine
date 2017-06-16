@@ -1,6 +1,6 @@
 # dopcine
 
-develop: [ ![Codeship Status for multicora/dopcine](https://app.codeship.com/projects/171a1cc0-3500-0135-8a2f-6aba2a7fe52d/status?branch=develop)](https://app.codeship.com/projects/227004)
+Build status of the branch `develop`: [ ![Codeship Status for multicora/dopcine](https://app.codeship.com/projects/171a1cc0-3500-0135-8a2f-6aba2a7fe52d/status?branch=develop)](https://app.codeship.com/projects/227004)
 
 ## Requironments
 * MySql
