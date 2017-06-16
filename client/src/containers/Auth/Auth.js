@@ -5,7 +5,7 @@ import AuthContainer from './components/AuthContainer';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {
-  toggle,
+  toggle
 } from 'modules/auth';
 
 const Auth = props => {
@@ -13,7 +13,7 @@ const Auth = props => {
   return (
     <div>
       <Dialog
-        title="Sign in"
+        title={props.requestMessage || "Sign in"}
         modal={false}
         open={props.open}
         onRequestClose={props.toggle}
@@ -26,7 +26,7 @@ const Auth = props => {
 
 const mapStateToProps = state => ({
   open: state.auth.open,
-  routing: state.routing
+  requestMessage: state.auth.requestMessage
 }); 
 
 const mapDispatchToProps = dispatch => bindActionCreators({

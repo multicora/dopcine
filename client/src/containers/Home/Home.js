@@ -5,16 +5,15 @@ import Auth from 'containers/Auth/Auth.js';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {
-  toggle,
-  confirmPassword
+  toggle
 } from 'modules/auth';
 
 class Home extends Component {
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.location.token)  {
-      nextProps.toggle();
-      confirmPassword(nextProps.location.token)
+    let token = nextProps.location.token;
+    if (token) {
+      nextProps.toggle({token});
     }
   }
 
@@ -23,6 +22,7 @@ class Home extends Component {
       <div>
         <Header toggle={this.props.toggle}/>
         <Auth />
+        <PreloadingOvelay />
         {this.props.children}
       </div>
     );
@@ -30,8 +30,7 @@ class Home extends Component {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  toggle,
-  confirmPassword
+  toggle
 }, dispatch)
 
 export default connect(

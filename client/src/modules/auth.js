@@ -10,47 +10,49 @@ export const REGISTER = 'auth/REGISTER';
 const initialState = {
   open: false,
   selectedTab: "login",
-  requestError: ""
+  requestInProgress: false,
+  requestError: "",
+  requestMessage: "",
+  token: ""
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case TOGGLE_VISIBILITY:
       return {
-        ...state,
+        ...initialState,
         open: !state.open,
         selectedTab: !state.open ? initialState.selectedTab : state.selectedTab,
-        requestInProgress: false,
-        requestError: ""
+        token: action.token
       }
 
     case SELECT_TAB:
       return {
-        ...state,
-        selectedTab: action.value,
-        requestInProgress: false,
-        requestError: ""
+        ...initialState,
+        open: state.open,
+        selectedTab: action.value
       }
 
     case REQUEST_INPROGRESS:
       return {
         ...state,
-        requestInProgress: true
+        requestInProgress: true,
+        requestMessage: action.requestMessage
       }
 
     case REQUEST_COMPLETED:
       return {
-        ...state,
-        open: false,
-        requestInProgress: false,
-        requestError: ""
+        ...initialState,
+        requestMessage: action.requestMessage || ""
       }
 
     case REQUEST_FAILED:
       return {
         ...state,
         requestInProgress: false,
-        requestError: action.error
+        requestError: action.error,
+        requestMessage: action.requestMessage || "",
+        token: action.token
       }
 
     default:
@@ -58,10 +60,11 @@ export default (state = initialState, action) => {
   }
 }
 
-export const toggle = () => {
+export const toggle = ({token}) => {
   return dispatch => {
     dispatch({
-      type: TOGGLE_VISIBILITY
+      type: TOGGLE_VISIBILITY,
+      token
     })
   }
 }
@@ -87,7 +90,7 @@ export const register = ({email, password, confirmPassword, firstName, lastName}
         if (response.error) {
           dispatch({
             type: REQUEST_FAILED,
-            error: response ? response.message : "An error occured in Auth Register call"
+            error: response ? response.message : "An error occured in Auth 'Register' call"
           });
         } else {
           dispatch({
@@ -95,7 +98,7 @@ export const register = ({email, password, confirmPassword, firstName, lastName}
           });
         }
       }).catch((err) => {
-        console.warn((err).toString());
+        console.warn((err.message || err).toString());
       });
   }
 }
@@ -111,11 +114,37 @@ export const login = ({email, password}) => {
         if (response.error) {
           dispatch({
             type: REQUEST_FAILED,
-            error: response ? response.message : "An error occured in Auth Register call"
+            error: response ? response.message : "An error occured in Auth 'Login' call"
           });
         } else {
           dispatch({
             type: REQUEST_COMPLETED,
+          });
+        }
+      }).catch((err) => {
+        console.warn((err.message || err).toString());
+      });
+  }
+}
+
+export const confirmEmail = ({token}) => {
+  return dispatch => {
+    dispatch({
+      type: REQUEST_INPROGRESS,
+      requestMessage: "Confirming email..."
+    });
+
+    return AuthService.confirmEmail({token})
+      .then(response => {
+        if (response.error) {
+          dispatch({
+            type: REQUEST_FAILED,
+            requestMessage: response ? response.message : "An error occured in Auth 'Confirm Email' call"
+          });
+        } else {
+          dispatch({
+            type: REQUEST_COMPLETED,
+            requestMessage: ""
           });
         }
       }).catch((err) => {

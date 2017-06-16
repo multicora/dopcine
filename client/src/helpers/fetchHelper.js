@@ -1,5 +1,7 @@
 const errorHelper = (response) => {
-  return response.json();
+  return response.text().then(function(text) {
+    return text ? JSON.parse(text) : {}
+  })
 }
 export default (method, url, body, params = {}) => {
   if (!method) {

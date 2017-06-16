@@ -6,5 +6,8 @@ export default {
   },
   login: (data) => {
     return FetchAdapter("POST", "/api/login", data);
-  }
+  },
+  confirmEmail: (data) => {
+    return FetchAdapter("POST", "/api/confirm-email", data);
+  },
 }

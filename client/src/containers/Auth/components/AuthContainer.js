@@ -11,7 +11,8 @@ import { connect } from 'react-redux'
 import {
   selectTab,
   register,
-  login
+  login,
+  confirmEmail
 } from 'modules/auth'
 
 const containerStyles = {
@@ -39,7 +40,11 @@ class AuthContainer extends Component {
   componentWillReceiveProps(nextProps) {
     let isNewFormValid = this.__isFormValid(this.__forms[nextProps.selectedTab]);
     nextProps.selectedTab !== this.props.selectedTab && isNewFormValid !== this.state.isFormValid
-      && this.setState({isFormValid: isNewFormValid})
+      && this.setState({isFormValid: isNewFormValid});
+  }
+
+  componentDidMount() {
+    this.props.token && this.props.confirmEmail({token: this.props.token});
   }
 
   __onFormChange(form) {
@@ -68,11 +73,13 @@ class AuthContainer extends Component {
   }
 
   render() {
-    let {toggle, selectTab, selectedTab, requestInProgress, requestError} = this.props;
+    let {toggle, selectTab, selectedTab, requestInProgress, requestError, token} = this.props;
     let {isFormValid} = this.state;
 
-    return (
+    let loadingOverlay = (<div className={"loadingOverlay"} style={{ width: "100%", height: "100px" }} />);
+    let tabs = (
       <div>
+        <div className={"loadingOverlay"} />
         <Tabs
           value={selectedTab}
           onChange={selectTab}
@@ -105,19 +112,23 @@ class AuthContainer extends Component {
         </div>
       </div>
     );
+
+    return token ? loadingOverlay : tabs;
   }
 }
 
 const mapStateToProps = state => ({
   selectedTab: state.auth.selectedTab,
   requestInProgress: state.auth.requestInProgress,
-  requestError: state.auth.requestError
+  requestError: state.auth.requestError,
+  token: state.auth.token
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   selectTab,
   register,
-  login
+  login,
+  confirmEmail
 }, dispatch)
 
 export default connect(
