@@ -1,37 +1,46 @@
 import React, {Component} from 'react'
-import Header from './components/Header/Header.js';
-import Auth from 'containers/Auth/Auth.js';
+import Auth from 'containers/Auth/Auth';
+import Dialog from 'components/Dialog/Dialog';
+import Header from './components/Header/Header';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import {
-  toggle
-} from 'modules/auth';
+import { toggle } from 'modules/auth';
+import { toggle as toggleDialog } from 'modules/dialog';
 
 class Home extends Component {
 
   componentWillReceiveProps(nextProps) {
     let token = nextProps.location.token;
+    let {actions} = nextProps;
     if (token) {
-      nextProps.toggle({token});
+      actions.toggleDialog({
+        message: "Confirming email...",
+        loaderIcon: "action.loaderIcon",
+        onOpen: "confirmEmail",
+        onOpenProps: {token}
+      });
     }
   }
 
   render() {
+    let {actions, children} = this.props;
     return (
       <div>
-        <Header toggle={this.props.toggle}/>
+        <Header toggle={actions.toggle}/>
         <Auth />
-        <PreloadingOvelay />
-        {this.props.children}
+        <Dialog />
+        {children}
       </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  toggle
-}, dispatch)
+const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({
+    toggle,
+    toggleDialog
+  }, dispatch)
+});
 
 export default connect(
   null,

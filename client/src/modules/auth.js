@@ -1,4 +1,6 @@
-import AuthService from 'services/auth.js';
+import AuthService from 'services/auth';
+import {TOGGLE_VISIBILITY as TOGGLE_DIALOG_VISIBILITY, SET_CONTENT as SET_DIALOG_CONTENT} from './dialog';
+import {ON_LOGIN} from './session';
 
 export const TOGGLE_VISIBILITY = 'auth/TOGGLE_VISIBILITY';
 export const SELECT_TAB = 'auth/SELECT_TAB';
@@ -22,8 +24,7 @@ export default (state = initialState, action) => {
       return {
         ...initialState,
         open: !state.open,
-        selectedTab: !state.open ? initialState.selectedTab : state.selectedTab,
-        token: action.token
+        selectedTab: !state.open ? initialState.selectedTab : state.selectedTab
       }
 
     case SELECT_TAB:
@@ -60,11 +61,10 @@ export default (state = initialState, action) => {
   }
 }
 
-export const toggle = ({token}) => {
+export const toggle = () => {
   return dispatch => {
     dispatch({
-      type: TOGGLE_VISIBILITY,
-      token
+      type: TOGGLE_VISIBILITY
     })
   }
 }
@@ -118,7 +118,8 @@ export const login = ({email, password}) => {
           });
         } else {
           dispatch({
-            type: REQUEST_COMPLETED,
+            type: ON_LOGIN,
+            token: response.token
           });
         }
       }).catch((err) => {
@@ -129,23 +130,35 @@ export const login = ({email, password}) => {
 
 export const confirmEmail = ({token}) => {
   return dispatch => {
-    dispatch({
-      type: REQUEST_INPROGRESS,
-      requestMessage: "Confirming email..."
-    });
 
     return AuthService.confirmEmail({token})
       .then(response => {
         if (response.error) {
           dispatch({
-            type: REQUEST_FAILED,
-            requestMessage: response ? response.message : "An error occured in Auth 'Confirm Email' call"
+            type: SET_DIALOG_CONTENT,
+            message: response.error,
+            hasLoader: true,
+            loaderIcon: "Error"
           });
         } else {
           dispatch({
-            type: REQUEST_COMPLETED,
-            requestMessage: ""
+            type: SET_DIALOG_CONTENT,
+            message: "Email has been confirmed successfully!",
+            hasLoader: true,
+            loaderIcon: "Success",
           });
+
+          setTimeout(() => {
+            dispatch({
+              type: TOGGLE_DIALOG_VISIBILITY
+            });
+          }, 2500);
+
+          setTimeout(() => {
+            dispatch({
+              type: TOGGLE_VISIBILITY
+            });
+          }, 2700);
         }
       }).catch((err) => {
         console.warn((err.message || err).toString());
