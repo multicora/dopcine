@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "immutable": "^3.8.1",
     "material-ui": "^0.18.3",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "react-tap-event-plugin": "^2.0.1"
+    "react-router-redux": "^5.0.0-alpha.6",
+    "react-tap-event-plugin": "^2.0.1",
+    "redux-immutable": "^4.0.0",
+    "reselect": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "7.1.0",

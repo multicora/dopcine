@@ -1,3 +1,6 @@
+import {Map} from "immutable";
+import { createSelector } from 'reselect'
+
 import AuthService from 'services/auth';
 import {TOGGLE_VISIBILITY as TOGGLE_DIALOG_VISIBILITY, SET_CONTENT as SET_DIALOG_CONTENT} from './dialog';
 import {ON_LOGIN} from './session';
@@ -9,52 +12,47 @@ export const REQUEST_COMPLETED = 'auth/REQUEST_COMPLETED';
 export const REQUEST_FAILED = 'auth/REQUEST_FAILED';
 export const REGISTER = 'auth/REGISTER';
 
-const initialState = {
+const initialState = Map({
   open: false,
   selectedTab: "login",
   requestInProgress: false,
   requestError: "",
   requestMessage: "",
   token: ""
-};
+});
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case TOGGLE_VISIBILITY:
-      return {
-        ...initialState,
-        open: !state.open,
-        selectedTab: !state.open ? initialState.selectedTab : state.selectedTab
-      }
+      return initialState.merge({
+        open: !state.get("open"),
+        selectedTab: !state.get("open") ? initialState.get("selectedTab") : state.get("selectedTab")
+      });
 
     case SELECT_TAB:
-      return {
-        ...initialState,
-        open: state.open,
+      return initialState.merge({
+        open: state.get("open"),
         selectedTab: action.value
-      }
+      })
 
     case REQUEST_INPROGRESS:
-      return {
-        ...state,
+      return state.merge({
         requestInProgress: true,
         requestMessage: action.requestMessage
-      }
+      });
 
     case REQUEST_COMPLETED:
-      return {
-        ...initialState,
+      return initialState.set({
         requestMessage: action.requestMessage || ""
-      }
+      });
 
     case REQUEST_FAILED:
-      return {
-        ...state,
+      return state.merge({
         requestInProgress: false,
         requestError: action.error,
         requestMessage: action.requestMessage || "",
         token: action.token
-      }
+      });
 
     default:
       return state
@@ -165,3 +163,17 @@ export const confirmEmail = ({token}) => {
       });
   }
 }
+
+// selewctors
+
+// selector
+const getOpen = (state) => state.get("auth").get("open")
+// reselect function
+const getOpenState = createSelector(
+  [ getOpen ],
+  (open) => open
+);
+
+export const selectors = {
+  getOpenState
+};

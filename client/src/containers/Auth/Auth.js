@@ -5,11 +5,12 @@ import AuthContainer from './components/AuthContainer';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {
+  selectors,
   toggle
 } from 'modules/auth';
 
 const Auth = props => {
-
+  console.log("Auth");
   return (
     <div>
       <Dialog
@@ -24,10 +25,13 @@ const Auth = props => {
   );
 }
 
-const mapStateToProps = state => ({
-  open: state.auth.open,
-  requestMessage: state.auth.requestMessage
-}); 
+const mapStateToProps = state => {
+  const auth = state.get("auth");
+  return ({
+    open: selectors.getOpenState(state),
+    requestMessage: auth.get("requestMessage")
+  })
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   toggle

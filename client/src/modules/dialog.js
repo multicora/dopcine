@@ -1,35 +1,35 @@
+import {Map} from "immutable";
+
 export const TOGGLE_VISIBILITY = 'dialog/TOGGLE_VISIBILITY';
 export const SET_CONTENT = 'dialog/SET_CONTENT';
 
-const initialState = {
+const initialState = Map({
   open: false,
   message: "",
   hasLoader: true,
   loaderIcon: "action.loaderIcon",
   onOpen: "",
   onOpenProps: false
-};
+});
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case TOGGLE_VISIBILITY:
-      return {
-        ...state,
-        open: !state.open,
-        message: !state.open ? action.message : "",
+      return state.merge({
+        open: !state.get("open"),
+        message: !state.get("open") ? action.message : "",
         hasLoader: action.hasLoader,
         loaderIcon: action.loaderIcon,
-        onOpen: !state.open ? action.onOpen : "",
+        onOpen: !state.get("open") ? action.onOpen : "",
         onOpenProps: action.onOpenProps
-      }
+      });
     case SET_CONTENT:
-      return {
-        ...state,
-        message: state.open ? action.message : "",
+      return state.merge({
+        message: state.get("open") ? action.message : "",
         hasLoader: action.hasLoader,
         loaderIcon: action.loaderIcon,
         onOpen: false
-      }
+      });
 
     default:
       return state

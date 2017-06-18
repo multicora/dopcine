@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {Tabs, Tab} from 'material-ui/Tabs';
-import Login from './Login';
-import Register from './Register';
-import Form from 'components/Form/Form';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import {Tabs, Tab} from 'material-ui/Tabs';
+import Form from 'components/Form/Form';
+import Login from './Login';
+import Register from './Register';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -73,6 +73,8 @@ class AuthContainer extends Component {
   }
 
   render() {
+  console.log("AuthContainer")
+
     let {toggle, selectTab, selectedTab, requestInProgress, requestError, token} = this.props;
     let {isFormValid} = this.state;
 
@@ -117,12 +119,15 @@ class AuthContainer extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  selectedTab: state.auth.selectedTab,
-  requestInProgress: state.auth.requestInProgress,
-  requestError: state.auth.requestError,
-  token: state.auth.token
-})
+const mapStateToProps = state => {
+  const auth = state.get("auth");
+  return ({
+    selectedTab: auth.get("selectedTab"),
+    requestInProgress: auth.get("requestInProgress"),
+    requestError: auth.get("requestError"),
+    token: auth.get("token")
+  });
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   selectTab,
@@ -134,4 +139,5 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AuthContainer)
+)(AuthContainer);
+

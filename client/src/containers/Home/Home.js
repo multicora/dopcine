@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import Auth from 'containers/Auth/Auth';
 import Dialog from 'components/Dialog/Dialog';
 import Header from './components/Header/Header';
 
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
 import { toggle } from 'modules/auth';
 import { toggle as toggleDialog } from 'modules/dialog';
 
@@ -45,4 +45,4 @@ const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({
 export default connect(
   null,
   mapDispatchToProps
-)(Home)
+)(Home);
