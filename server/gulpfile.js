@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp = require('gulp');
 var sequence = require('gulp-sequence');
 var nodemon = require('gulp-nodemon');
@@ -20,5 +22,5 @@ gulp.task('start', function () {
         'eslint'
       ];
     }
-  })
-})
+  });
+});

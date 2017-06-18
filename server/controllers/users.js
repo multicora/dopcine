@@ -1,3 +1,4 @@
+'use strict';
 
 const passwordHash = require('password-hash');
 // const Promise = require('promise');
@@ -10,12 +11,9 @@ const templates = require('../services/templates.js')();
 // const USERNAME_OR_PASSWORD_IS_INCORRECT = 'USERNAME_OR_PASSWORD_IS_INCORRECT';
 
 module.exports = function (DAL) {
-  'use strict';
 
   return {
     login: (login, password) => {
-      let token;
-
       return DAL.users.getUserForLogin(login).then((user) => {
         // Check user
         const result = !user ? Promise.reject({
@@ -112,7 +110,6 @@ module.exports = function (DAL) {
     register: (email, password, confirmPassword, emailLink) => {
       const confirmToken = utils.newToken();
       const link = emailLink + confirmToken;
-      let result;
 
       return DAL.users.getUserByEmail(email).then((user) => {
         // Check user

@@ -5,8 +5,6 @@ module.exports = {
 };
 
 function readFiles() {
-  const fs = require('fs');
-  const Promise = require('promise');
   const utils = require('./utils.js');
 
   let tls = {
