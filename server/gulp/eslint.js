@@ -90,7 +90,7 @@ function lint(withError) {
     .pipe(eslint.format());
 
   if (withError) {
-    stream.pipe(eslint.failAfterError());
+    stream = stream.pipe(eslint.failAfterError());
   }
 
   return stream;

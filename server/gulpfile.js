@@ -15,7 +15,6 @@ gulp.task('serve', function (done) {
 gulp.task('start', function () {
   nodemon({
     script: 'index.js',
-    // ext: 'js html',
     env: { 'NODE_ENV': 'development' },
     tasks: function () {
       return [

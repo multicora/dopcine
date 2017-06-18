@@ -9,7 +9,7 @@ module.exports = function(){
       accountId: config.storage.accountId,
       applicationKey: config.storage.applicationKey
   });
-     
+
   // authorize with provided credentials
   return b2.authorize().then( () => {
     return {
