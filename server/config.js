@@ -42,11 +42,17 @@ validate(fullConfig);
 module.exports = fullConfig;
 
 function validate(conf) {
-  !conf.mailGun.apiKey && showError('"config.mailGun.apiKey" key should be exist and not empty');
-  !conf.mailGun.domain && showError('"config.mailGun.domain" key should be exist and not empty');
-  !conf.mail.defaultFrom && showError('"config.mail.defaultFrom" key should be exist and not empty');
+  validateProperty(conf.mailGun.apiKey, '"config.mailGun.apiKey" key should be exist and not empty');
+  validateProperty(conf.mailGun.domain, '"config.mailGun.domain" key should be exist and not empty');
+  validateProperty(conf.mail.defaultFrom, '"config.mail.defaultFrom" key should be exist and not empty');
 }
 
 function showError(msg) {
   throw new Error(msg);
+}
+
+function validateProperty(property, message) {
+  if (!property) {
+    showError(message);
+  }
 }
