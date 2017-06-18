@@ -4,7 +4,7 @@ var gulp = require('gulp');
 var sequence = require('gulp-sequence');
 var nodemon = require('gulp-nodemon');
 
-require('./gulp/jslint.js')();
+require('./gulp/eslint.js')();
 
 gulp.task('serve', function (done) {
   return sequence(['eslint'], ['start'], function () {
@@ -22,5 +22,11 @@ gulp.task('start', function () {
         'eslint'
       ];
     }
+  });
+});
+
+gulp.task('prepush', function (done) {
+  return sequence(['eslintWithError'], function () {
+    done();
   });
 });
