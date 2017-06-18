@@ -11,7 +11,7 @@ module.exports = function (server, DAL) {
     config: {
       description: 'Upload file',
       notes: 'Upload file to the storage, max sze 5Gb',
-      tags: ['api'],
+      tags: ['api', 'files'],
       payload: {
         output: 'stream',
         parse: true,

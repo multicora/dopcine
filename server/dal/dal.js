@@ -9,5 +9,8 @@ module.exports = function(connection){
   // Settings
   DAL.settings = require('./settings.js')(connection);
 
+  // Tokens
+  DAL.tokens = require('./tokens.js')(connection);
+
   return DAL;
 };
