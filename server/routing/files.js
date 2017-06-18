@@ -35,7 +35,6 @@ module.exports = function (server, DAL) {
             reply(err);
           });
         }
-        
       }
     }
   });

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp serve"
   },
   "author": "",
   "dependencies": {
@@ -20,5 +21,11 @@
     "promise": "^7.1.1",
     "sequelize": "^3.30.4",
     "vision": "^4.1.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.0",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-sequence": "^0.4.6"
   }
 }
