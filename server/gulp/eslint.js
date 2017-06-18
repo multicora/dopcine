@@ -67,17 +67,31 @@ var backendRules = {
 
 module.exports = function() {
   gulp.task('eslint', function () {
-    return gulp.src(config.esLintSelector)
-      .pipe(eslint({
-        envs: [
-          'node',
-          'es6',
-          'mocha'
-        ],
-        rules: backendRules,
-        extends: 'eslint:recommended',
-        useEslintrc: false
-      }))
-      .pipe(eslint.format());
+    return lint();
+  });
+
+  gulp.task('eslintWithError', function () {
+    return lint(true);
   });
 };
+
+function lint(withError) {
+  var stream = gulp.src(config.esLintSelector)
+    .pipe(eslint({
+      envs: [
+        'node',
+        'es6',
+        'mocha'
+      ],
+      rules: backendRules,
+      extends: 'eslint:recommended',
+      useEslintrc: false
+    }))
+    .pipe(eslint.format());
+
+  if (withError) {
+    stream.pipe(eslint.failAfterError());
+  }
+
+  return stream;
+}
