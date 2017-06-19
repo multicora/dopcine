@@ -11,7 +11,6 @@ const templates = require('../services/templates.js')();
 // const USERNAME_OR_PASSWORD_IS_INCORRECT = 'USERNAME_OR_PASSWORD_IS_INCORRECT';
 
 module.exports = function (DAL) {
-  'use strict';
 
   return {
     login: (login, password) => {

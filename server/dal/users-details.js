@@ -1,5 +1,12 @@
+'use strict';
+
 module.exports = function(connection) {
   const sqlBuilder = require('../services/sqlBuilder.js');
+  function parse(user) {
+    delete user.password;
+
+    return user;
+  }
 
   return {
 
