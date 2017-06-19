@@ -55,8 +55,8 @@ module.exports = function(connection) {
           'id int(255) NOT NULL UNIQUE, ',
           'firstName varchar(255), ',
           'lastName varchar(255), ',
-          'PRIMARY KEY (id)',
-          // 'FOREIGN KEY (user) REFERENCES users(id)'
+          'PRIMARY KEY (id), ',
+          'FOREIGN KEY (id) REFERENCES users(id)',
         ') '
       ].join('');
 
