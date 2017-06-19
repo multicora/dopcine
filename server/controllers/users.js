@@ -1,3 +1,4 @@
+'use strict';
 
 const passwordHash = require('password-hash');
 // const Promise = require('promise');
@@ -14,8 +15,6 @@ module.exports = function (DAL) {
 
   return {
     login: (login, password) => {
-      let token;
-
       return DAL.users.getUserForLogin(login).then((user) => {
         // Check user
         const result = !user ? Promise.reject({
@@ -133,7 +132,6 @@ module.exports = function (DAL) {
     register: (email, password, confirmPassword, emailLink, firstName, lastName) => {
       const confirmToken = utils.newToken();
       const link = emailLink + confirmToken;
-      let result;
 
       return DAL.users.getUserByEmail(email).then((user) => {
         // Check user
