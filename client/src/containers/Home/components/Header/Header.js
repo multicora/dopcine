@@ -10,7 +10,7 @@ const iconElementRight = (props) => {
     ? `${props.userProfile.firstName} ${props.userProfile.lastName}`
     : "Sign In";
   return (<div>
-    <RaisedButton label={label} onTouchTap={!label ? props.toggle : ()=> {}} />
+    <RaisedButton label={label} onTouchTap={!props.userProfile ? props.toggle : (()=> {})} />
     <FlatButton label="Save" />
   </div>);
 };

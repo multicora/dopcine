@@ -45,7 +45,6 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(selectors.getUserProfileState(state));
   return ({
     userProfile: selectors.getUserProfileState(state)
   })
