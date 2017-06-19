@@ -1,7 +1,7 @@
 import {Map} from "immutable";
 
-export const TOGGLE_VISIBILITY = 'dialog/TOGGLE_VISIBILITY';
-export const SET_CONTENT = 'dialog/SET_CONTENT';
+export const TOGGLE_VISIBILITY = "dialog/TOGGLE_VISIBILITY";
+export const SET_CONTENT = "dialog/SET_CONTENT";
 
 const initialState = Map({
   open: false,
@@ -32,7 +32,7 @@ export default (state = initialState, action) => {
       });
 
     default:
-      return state
+      return state;
   }
 }
 
@@ -45,9 +45,9 @@ export const toggle = ({message, hasLoader, loaderIcon, onOpen, onOpenProps}) =>
       loaderIcon,
       onOpen,
       onOpenProps
-    })
-  }
-}
+    });
+  };
+};
 
 export const setContent = ({message, hasLoader, loaderIcon}) => {
   return dispatch => {
@@ -56,6 +56,6 @@ export const setContent = ({message, hasLoader, loaderIcon}) => {
       message,
       hasLoader,
       loaderIcon
-    })
-  }
-}
+    });
+  };
+};

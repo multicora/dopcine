@@ -10,7 +10,7 @@ export const loadItem = (key) => {
     console.warn(`cant get "${key}" from LocaStorage`);
     return undefined;
   }
-}
+};
 
 export const saveItem = (key, value) => {
   try {
@@ -19,4 +19,4 @@ export const saveItem = (key, value) => {
   } catch (err) {
     console.warn(`cant save "${key}" to LocaStorage`);
   }
-}
+};

@@ -1,10 +1,10 @@
 import {Map} from "immutable";
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
-import SessionService from 'services/session';
-import {loadItem, saveItem} from 'helpers/localStorage';
-export const ON_LOGIN = 'session/ON_LOGIN';
-export const SAVE_USER_PROFILE = 'session/SAVE_USER_PROFILE';
+import SessionService from "services/session";
+import {loadItem, saveItem} from "helpers/localStorage";
+export const ON_LOGIN = "session/ON_LOGIN";
+export const SAVE_USER_PROFILE = "session/SAVE_USER_PROFILE";
 
 const initialState = Map({
   token: !!loadItem("token"),
@@ -23,9 +23,9 @@ export default (state = initialState, action) => {
       return state.set("user", action.user);
 
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const verifyUser = ({token}) => {
   return dispatch => {

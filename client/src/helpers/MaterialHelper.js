@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-const PropTypes = require('prop-types');
+import React, {Component} from "react";
+const PropTypes = require("prop-types");
 
 const ERRORS = {
   required: "This field is required",
@@ -70,4 +70,4 @@ function makeMaterial(WrappedComponent) {
   }
 }
 
-export default makeMaterial
+export default makeMaterial;

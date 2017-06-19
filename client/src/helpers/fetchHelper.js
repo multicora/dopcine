@@ -1,8 +1,8 @@
 const errorHelper = (response) => {
   return response.text().then(function(text) {
-    return text ? JSON.parse(text) : {}
+    return text ? JSON.parse(text) : {};
   })
-}
+};
 export default (method, url, body, params = {}) => {
   if (!method) {
     return {
@@ -19,4 +19,4 @@ export default (method, url, body, params = {}) => {
       ...params
     }).then(errorHelper);
   }
-}
+};

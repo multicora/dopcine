@@ -1,16 +1,16 @@
 import {Map} from "immutable";
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
-import AuthService from 'services/auth';
-import {TOGGLE_VISIBILITY as TOGGLE_DIALOG_VISIBILITY, SET_CONTENT as SET_DIALOG_CONTENT} from './dialog';
-import {ON_LOGIN} from './session';
+import AuthService from "services/auth";
+import {TOGGLE_VISIBILITY as TOGGLE_DIALOG_VISIBILITY, SET_CONTENT as SET_DIALOG_CONTENT} from "./dialog";
+import {ON_LOGIN} from "./session";
 
-export const TOGGLE_VISIBILITY = 'auth/TOGGLE_VISIBILITY';
-export const SELECT_TAB = 'auth/SELECT_TAB';
-export const REQUEST_INPROGRESS = 'auth/REQUEST_INPROGRESS';
-export const REQUEST_COMPLETED = 'auth/REQUEST_COMPLETED';
-export const REQUEST_FAILED = 'auth/REQUEST_FAILED';
-export const REGISTER = 'auth/REGISTER';
+export const TOGGLE_VISIBILITY = "auth/TOGGLE_VISIBILITY";
+export const SELECT_TAB = "auth/SELECT_TAB";
+export const REQUEST_INPROGRESS = "auth/REQUEST_INPROGRESS";
+export const REQUEST_COMPLETED = "auth/REQUEST_COMPLETED";
+export const REQUEST_FAILED = "auth/REQUEST_FAILED";
+export const REGISTER = "auth/REGISTER";
 
 const initialState = Map({
   open: false,
@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case TOGGLE_VISIBILITY:
       return initialState.merge({
-        open: !state.get("open"),
+        open: action.hasOwnProperty("isOpen") ? action.isOpen : !state.get("open"),
         selectedTab: !state.get("open") ? initialState.get("selectedTab") : state.get("selectedTab")
       });
 
@@ -33,7 +33,7 @@ export default (state = initialState, action) => {
       return initialState.merge({
         open: state.get("open"),
         selectedTab: action.value
-      })
+      });
 
     case REQUEST_INPROGRESS:
       return state.merge({
@@ -55,26 +55,27 @@ export default (state = initialState, action) => {
       });
 
     default:
-      return state
+      return state;
   }
 }
 
-export const toggle = () => {
+export const toggle = (data) => {
   return dispatch => {
     dispatch({
-      type: TOGGLE_VISIBILITY
-    })
-  }
-}
+      type: TOGGLE_VISIBILITY,
+      ...(data.hasOwnProperty("isOpen") ? {isOpen: data.isOpen} : {})
+    });
+  };
+};
 
 export const selectTab = (value) => {
   return dispatch => {
     dispatch({
       type: SELECT_TAB,
       value
-    })
-  }
-}
+    });
+  };
+};
 
 export const register = ({email, password, confirmPassword, firstName, lastName}) => {
 
@@ -88,7 +89,7 @@ export const register = ({email, password, confirmPassword, firstName, lastName}
         if (response.error) {
           dispatch({
             type: REQUEST_FAILED,
-            error: response ? response.message : "An error occured in Auth 'Register' call"
+            error: response ? response.message : "An error occured in Auth \"Register\" call"
           });
         } else {
           dispatch({
@@ -98,8 +99,8 @@ export const register = ({email, password, confirmPassword, firstName, lastName}
       }).catch((err) => {
         console.warn((err.message || err).toString());
       });
-  }
-}
+  };
+};
 
 export const login = ({email, password}) => {
   return dispatch => {
@@ -112,7 +113,7 @@ export const login = ({email, password}) => {
         if (response.error) {
           dispatch({
             type: REQUEST_FAILED,
-            error: response ? response.message : "An error occured in Auth 'Login' call"
+            error: response ? response.message : "An error occured in Auth \"Login\" call"
           });
         } else {
           dispatch({
@@ -126,8 +127,8 @@ export const login = ({email, password}) => {
       }).catch((err) => {
         console.warn((err.message || err).toString());
       });
-  }
-}
+  };
+};
 
 export const confirmEmail = ({token}) => {
   return dispatch => {
@@ -164,13 +165,13 @@ export const confirmEmail = ({token}) => {
       }).catch((err) => {
         console.warn((err.message || err).toString());
       });
-  }
-}
+  };
+};
 
 // selectors
 
 // selector
-const getOpen = (state) => state.get("auth").get("open")
+const getOpen = (state) => state.get("auth").get("open");
 // reselect function
 const getOpenState = createSelector(
   [ getOpen ],

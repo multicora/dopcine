@@ -1,19 +1,19 @@
-import React, {Component} from 'react';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import {Tabs, Tab} from 'material-ui/Tabs';
-import Form from 'components/Form/Form';
-import Login from './Login';
-import Register from './Register';
+import React, {Component} from "react";
+import FlatButton from "material-ui/FlatButton";
+import RaisedButton from "material-ui/RaisedButton";
+import {Tabs, Tab} from "material-ui/Tabs";
+import Form from "components/Form/Form";
+import Login from "./Login";
+import Register from "./Register";
 
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import {
   selectTab,
   register,
   login,
   confirmEmail
-} from 'modules/auth'
+} from "modules/auth";
 
 const containerStyles = {
   "display": "flex",
@@ -24,7 +24,7 @@ const containerStyles = {
 const actionStyles = {
   "display": "flex",
   "justifyContent": "flex-end"
-}
+};
 
 class AuthContainer extends Component {
   __forms = {};
@@ -73,7 +73,7 @@ class AuthContainer extends Component {
   }
 
   render() {
-  console.log("AuthContainer")
+  console.log("AuthContainer");
 
     let {toggle, selectTab, selectedTab, requestInProgress, requestError, token} = this.props;
     let {isFormValid} = this.state;
@@ -102,7 +102,7 @@ class AuthContainer extends Component {
             key={0}
             label="Cancel"
             default={true}
-            onTouchTap={toggle}
+            onTouchTap={toggle.bind(null, {isOpen: false})}
           />
           <RaisedButton
             label="Submit"
@@ -117,7 +117,7 @@ class AuthContainer extends Component {
 
     return token ? loadingOverlay : tabs;
   }
-}
+};
 
 const mapStateToProps = state => {
   const auth = state.get("auth");
@@ -134,7 +134,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   register,
   login,
   confirmEmail
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

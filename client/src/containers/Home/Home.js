@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { loadItem } from 'helpers/localStorage';
-import Auth from 'containers/Auth/Auth';
-import Dialog from 'components/Dialog/Dialog';
-import Header from './components/Header/Header';
+import React, {Component} from "react"
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
+import { loadItem } from "helpers/localStorage";
+import Auth from "containers/Auth/Auth";
+import Dialog from "components/Dialog/Dialog";
+import Header from "./components/Header/Header";
 
-import { toggle } from 'modules/auth';
-import { verifyUser, selectors } from 'modules/session';
-import { toggle as toggleDialog } from 'modules/dialog';
+import { toggle } from "modules/auth";
+import { verifyUser, selectors } from "modules/session";
+import { toggle as toggleDialog } from "modules/dialog";
 
 class Home extends Component {
 
@@ -42,7 +42,7 @@ class Home extends Component {
       </div>
     );
   }
-}
+};
 
 const mapStateToProps = state => {
   return ({

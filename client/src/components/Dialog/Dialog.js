@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import Dialog from 'material-ui/Dialog';
+import React, { Component } from "react";
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
+import Dialog from "material-ui/Dialog";
 
-import { toggle } from 'modules/dialog';
-import { confirmEmail } from 'modules/auth';
+import { toggle } from "modules/dialog";
+import { confirmEmail } from "modules/auth";
 
 class DialogComponent extends Component {
 
@@ -15,7 +15,7 @@ class DialogComponent extends Component {
 
   render() {
     let { actions} = this.props;
-  console.log("Dialog")
+    console.log("Dialog");
 
     return (
       <div>
@@ -27,7 +27,7 @@ class DialogComponent extends Component {
         >
           <div>
             { this.props.hasLoader && <div>Loader
-              <span> {this.props.loaderIcon} </span>
+              <span>{ this.props.loaderIcon }</span>
             </div>}
           </div>
         </Dialog>

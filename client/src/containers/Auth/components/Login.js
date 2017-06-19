@@ -1,6 +1,6 @@
-import React from 'react';
-import TextField from 'material-ui/TextField';
-import makeMaterial from 'helpers/MaterialHelper';
+import React from "react";
+import TextField from "material-ui/TextField";
+import makeMaterial from "helpers/MaterialHelper";
 
 const input = ((props) => <TextField {...props} />)
 const MaterialInput = makeMaterial(input)
@@ -31,6 +31,6 @@ const Login = props => {
         required/>
       </div>
   );
-}
+};
 
-export default Login
+export default Login;
