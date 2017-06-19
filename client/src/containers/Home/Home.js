@@ -1,14 +1,22 @@
 import React, {Component} from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { loadItem } from 'helpers/localStorage';
 import Auth from 'containers/Auth/Auth';
 import Dialog from 'components/Dialog/Dialog';
 import Header from './components/Header/Header';
 
 import { toggle } from 'modules/auth';
+import { verifyUser, selectors } from 'modules/session';
 import { toggle as toggleDialog } from 'modules/dialog';
 
 class Home extends Component {
+
+  componentDidMount() {
+    const token = loadItem("token");
+    token && typeof(this.props.actions.verifyUser) === "function"
+      && this.props.actions.verifyUser({token});
+  }
 
   componentWillReceiveProps(nextProps) {
     let token = nextProps.location.token;
@@ -24,10 +32,10 @@ class Home extends Component {
   }
 
   render() {
-    let {actions, children} = this.props;
+    let {actions, children, userProfile} = this.props;
     return (
       <div>
-        <Header toggle={actions.toggle}/>
+        <Header userProfile={userProfile} toggle={actions.toggle}/>
         <Auth />
         <Dialog />
         {children}
@@ -36,13 +44,21 @@ class Home extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  console.log(selectors.getUserProfileState(state));
+  return ({
+    userProfile: selectors.getUserProfileState(state)
+  })
+};
+
 const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({
     toggle,
-    toggleDialog
+    toggleDialog,
+    verifyUser
   }, dispatch)
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Home);

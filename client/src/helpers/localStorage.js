@@ -5,7 +5,7 @@ export const loadItem = (key) => {
       return undefined;
     }
     // use JSON.parse in case of serializable data
-    return value; 
+    return value;
   } catch (err) {
     console.warn(`cant get "${key}" from LocaStorage`);
     return undefined;

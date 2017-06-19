@@ -5,11 +5,15 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import styles from './Header.css';
 
-const iconElementRight = (props) =>
-  (<div>
-    <RaisedButton label="Sign In" onTouchTap={props.toggle} />
+const iconElementRight = (props) => {
+  const label = props.userProfile
+    ? `${props.userProfile.firstName} ${props.userProfile.lastName}`
+    : "Sign In";
+  return (<div>
+    <RaisedButton label={label} onTouchTap={!label ? props.toggle : ()=> {}} />
     <FlatButton label="Save" />
   </div>);
+};
 
 const Header = (props) => (
   <div>

@@ -1,5 +1,5 @@
 import {Map} from "immutable";
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect';
 
 import AuthService from 'services/auth';
 import {TOGGLE_VISIBILITY as TOGGLE_DIALOG_VISIBILITY, SET_CONTENT as SET_DIALOG_CONTENT} from './dialog';
@@ -119,6 +119,9 @@ export const login = ({email, password}) => {
             type: ON_LOGIN,
             token: response.token
           });
+          dispatch({
+            type: TOGGLE_VISIBILITY
+          });
         }
       }).catch((err) => {
         console.warn((err.message || err).toString());
@@ -164,7 +167,7 @@ export const confirmEmail = ({token}) => {
   }
 }
 
-// selewctors
+// selectors
 
 // selector
 const getOpen = (state) => state.get("auth").get("open")

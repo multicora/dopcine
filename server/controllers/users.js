@@ -55,6 +55,27 @@ module.exports = function (DAL) {
       });
     },
 
+    verifyUser: (token) => {
+      return DAL.tokens.get(token).then((tokenObj) => {
+        // Check token
+        const result = !tokenObj ? Promise.reject({
+          key: keys.AUTH.TOKEN_IS_INCORRECT,
+          type: 401
+        }) : Promise.resolve(tokenObj);
+
+        return result;
+      }).then((tokenObj) => {
+        // Get user profile
+        return Promise.all([
+          DAL.users.getUserById(tokenObj.user),
+          DAL.usersDetails.getById(tokenObj.user)
+        ]);
+      }).then(response => {
+        const user = response.reduce((res, val) => Object.assign({}, res, val), {});
+        return Promise.resolve(user);
+      });
+    },
+
     confirmEmail: (token) => {
       return DAL.tokens.get(token).then((tokenObj) => {
         // Check token

@@ -56,6 +56,7 @@ module.exports = function(connection) {
           'firstName varchar(255), ',
           'lastName varchar(255), ',
           'PRIMARY KEY (id)',
+          // 'FOREIGN KEY (user) REFERENCES users(id)'
         ') '
       ].join('');
 
