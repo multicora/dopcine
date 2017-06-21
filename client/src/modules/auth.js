@@ -17,8 +17,7 @@ const initialState = Map({
   selectedTab: "login",
   requestInProgress: false,
   requestError: "",
-  requestMessage: "",
-  token: ""
+  requestMessage: ""
 });
 
 export default (state = initialState, action) => {
@@ -50,8 +49,7 @@ export default (state = initialState, action) => {
       return state.merge({
         requestInProgress: false,
         requestError: action.error,
-        requestMessage: action.requestMessage || "",
-        token: action.token
+        requestMessage: action.requestMessage || ""
       });
 
     default:
@@ -122,6 +120,56 @@ export const login = ({email, password}) => {
           });
           dispatch({
             type: TOGGLE_VISIBILITY
+          });
+        }
+      }).catch((err) => {
+        console.warn((err.message || err).toString());
+      });
+  };
+};
+
+export const setPassword = ({password, confirmPassword}) => {
+
+  return dispatch => {
+    dispatch({
+      type: REQUEST_INPROGRESS
+    });
+
+    return AuthService.setPassword({password, confirmPassword})
+      .then(response => {
+        if (response.error) {
+          dispatch({
+            type: REQUEST_FAILED,
+            error: response ? response.message : "An error occured in Auth \"Register\" call"
+          });
+        } else {
+          dispatch({
+            type: REQUEST_COMPLETED,
+          });
+        }
+      }).catch((err) => {
+        console.warn((err.message || err).toString());
+      });
+  };
+};
+
+export const resetPassword = ({email}) => {
+
+  return dispatch => {
+    dispatch({
+      type: REQUEST_INPROGRESS
+    });
+
+    return AuthService.resetPassword({email})
+      .then(response => {
+        if (response.error) {
+          dispatch({
+            type: REQUEST_FAILED,
+            error: response ? response.message : "An error occured in Auth \"Register\" call"
+          });
+        } else {
+          dispatch({
+            type: REQUEST_COMPLETED,
           });
         }
       }).catch((err) => {

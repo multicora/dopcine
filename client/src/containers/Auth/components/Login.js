@@ -9,26 +9,35 @@ const Login = props => {
 
   return (
     <div style={ props.styles }>
-      <MaterialInput
-        id="email"
-        name="email"
-        hintText="Email"
-        floatingLabelText="Email"
-        errorText={props.requestError || props.error}
-        value={props.email || ""}
-        onChange={ props.onChange || (() => {}) }
-        pattern={/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/}
-        required/>
-      <MaterialInput
-        id="password"
-        name="password"
-        hintText="Password"
-        floatingLabelText="Password"
-        errorText={props.error}
-        value={props.password || ""}
-        onChange={ props.onChange || (() => {}) }
-        pattern={/^[a-zA-Z0-9]{6,}$/}
-        required/>
+      <div style={ props.styles }>
+        <MaterialInput
+          id="email"
+          name="email"
+          hintText="Email"
+          floatingLabelText="Email"
+          errorText={props.requestError || props.error}
+          value={props.email || ""}
+          onChange={ props.onChange || (() => {}) }
+          pattern={/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/}
+          required/>
+        <MaterialInput
+          id="password"
+          name="password"
+          hintText="Password"
+          floatingLabelText="Password"
+          errorText={props.error}
+          value={props.password || ""}
+          onChange={ props.onChange || (() => {}) }
+          pattern={/^[a-zA-Z0-9]{6,}$/}
+          required/>
+        </div>
+        <div onClick={props.onForgotClick} style={{
+          "color": "red",
+          "textDecoration": "underline",
+          "marginTop": "20px",
+          "marginLeft": "-125px",
+          "cursor": "pointer"
+        }}> Forgot Password? </div>
       </div>
   );
 };

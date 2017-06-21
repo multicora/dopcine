@@ -5,6 +5,8 @@ import {Tabs, Tab} from "material-ui/Tabs";
 import Form from "components/Form/Form";
 import Login from "./Login";
 import Register from "./Register";
+import SetPassword from "./SetPassword";
+import ResetPassword from "./ResetPassword";
 
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -12,6 +14,8 @@ import {
   selectTab,
   register,
   login,
+  setPassword,
+  resetPassword,
   confirmEmail
 } from "modules/auth";
 
@@ -43,10 +47,6 @@ class AuthContainer extends Component {
       && this.setState({isFormValid: isNewFormValid});
   }
 
-  componentDidMount() {
-    this.props.token && this.props.confirmEmail({token: this.props.token});
-  }
-
   __onFormChange(form) {
     !this.__forms[form.formName]
       && (this.__forms[form.formName] = {name: form.formName, fields: {}, isFormValid: false});
@@ -69,53 +69,63 @@ class AuthContainer extends Component {
     Object.keys(formFieds).forEach((field) =>
       props[field] = formFieds[field].value
     );
-    typeof(this.props[selectedTab]) && this.props[selectedTab](props);
+    typeof(this.props[selectedTab]) === "function" && this.props[selectedTab](props);
   }
 
   render() {
-  console.log("AuthContainer");
+    console.log("AuthContainer");
 
-    let {toggle, selectTab, selectedTab, requestInProgress, requestError, token} = this.props;
+    let {toggle, selectTab, selectedTab, requestInProgress, requestError} = this.props;
     let {isFormValid} = this.state;
 
-    let loadingOverlay = (<div className={"loadingOverlay"} style={{ width: "100%", height: "100px" }} />);
-    let tabs = (
-      <div>
-        <div className={"loadingOverlay"} />
-        <Tabs
-          value={selectedTab}
-          onChange={selectTab}
-        >
-          <Tab label="Login" value="login">
-            { selectedTab === "login" && <Form name="login" onFormChange={this.__onFormChange.bind(this)}>
-              <Login requestError={requestError} styles={ containerStyles }/>
-            </Form> }
-          </Tab>
-          <Tab label="Register" value="register">
-            { selectedTab === "register" && <Form name="register" onFormChange={this.__onFormChange.bind(this)}>
-              <Register requestError={requestError} styles={ containerStyles }/>
-            </Form> }
-          </Tab>
-        </Tabs>
-        <div style={ actionStyles }>
-          <FlatButton
-            key={0}
-            label="Cancel"
-            default={true}
-            onTouchTap={toggle.bind(null, {isOpen: false})}
-          />
-          <RaisedButton
-            label="Submit"
-            primary={true}
-            disabled={!isFormValid || requestInProgress}
-            keyboardFocused={true}
-            onTouchTap={this.__onFormSubmit.bind(this)}
-          />
-        </div>
-      </div>
-    );
+    let registerLoginTabs = (<div>
+      <div className={"loadingOverlay"} />
+      <Tabs
+        value={selectedTab}
+        onChange={selectTab}
+      >
+        <Tab label="Login" value="login">
+          { selectedTab === "login" && <Form name="login" onFormChange={this.__onFormChange.bind(this)}>
+            <Login onForgotClick={selectTab.bind(null, "resetPassword")} requestError={requestError} styles={ containerStyles }/>
+          </Form> }
+        </Tab>
+        <Tab label="Register" value="register">
+          { selectedTab === "register" && <Form name="register" onFormChange={this.__onFormChange.bind(this)}>
+            <Register requestError={requestError} styles={ containerStyles }/>
+          </Form> }
+        </Tab>
+      </Tabs>
+    </div>);
 
-    return token ? loadingOverlay : tabs;
+    const actions = (<div style={ actionStyles }>
+      <FlatButton
+        key={0}
+        label="Cancel"
+        default={true}
+        onTouchTap={toggle.bind(null, {isOpen: false})}
+      />
+      <RaisedButton
+        label="Submit"
+        primary={true}
+        disabled={!isFormValid || requestInProgress}
+        keyboardFocused={true}
+        onTouchTap={this.__onFormSubmit.bind(this)}
+      />
+    </div>);
+
+    let resetSetPassBlock = (<div>
+      { selectedTab === "resetPassword" && <Form name="resetPassword" onFormChange={this.__onFormChange.bind(this)}>
+        <ResetPassword requestError={requestError} styles={ containerStyles }/>
+      </Form> }
+      { selectedTab === "setPassword" && <Form name="resetPassword" onFormChange={this.__onFormChange.bind(this)}>
+        <SetPassword requestError={requestError} styles={ containerStyles }/>
+      </Form> }
+    </div>);
+
+    return (<div>
+      { ~(["login", "register"]).indexOf(selectedTab) ? registerLoginTabs : resetSetPassBlock }
+      { actions }
+    </div>);
   }
 };
 
@@ -124,8 +134,7 @@ const mapStateToProps = state => {
   return ({
     selectedTab: auth.get("selectedTab"),
     requestInProgress: auth.get("requestInProgress"),
-    requestError: auth.get("requestError"),
-    token: auth.get("token")
+    requestError: auth.get("requestError")
   });
 };
 
@@ -133,6 +142,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   selectTab,
   register,
   login,
+  setPassword,
+  resetPassword,
   confirmEmail
 }, dispatch);
 

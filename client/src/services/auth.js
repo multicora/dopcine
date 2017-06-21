@@ -7,6 +7,12 @@ export default {
   login: (data) => {
     return FetchAdapter("POST", "/api/login", data);
   },
+  resetPassword: (data) => {
+    return FetchAdapter("POST", "/api/reset-password", data);
+  },
+  setPassword: (data) => {
+    return FetchAdapter("POST", "/api/set-password", data);
+  },
   confirmEmail: (data) => {
     return FetchAdapter("POST", "/api/confirm-email", data);
   },

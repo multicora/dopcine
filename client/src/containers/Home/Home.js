@@ -19,8 +19,7 @@ class Home extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let token = nextProps.location.token;
-    let {actions} = nextProps;
+    let {actions, location: {token, action}} = nextProps;
     if (token) {
       actions.toggleDialog({
         message: "Confirming email...",
