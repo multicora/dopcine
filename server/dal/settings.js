@@ -10,7 +10,7 @@ module.exports = function(connection) {
       unique: true,
       primaryKey: true
     },
-    value:{
+    value: {
       type: Sequelize.STRING,
       allowNull: false,
     }
@@ -38,7 +38,7 @@ module.exports = function(connection) {
         raw: true
       });
     },
-    update: (setting, cb) => {
+    update: (setting) => {
       return model.update({
         value: setting.value,
       }, {
@@ -48,7 +48,7 @@ module.exports = function(connection) {
       });
     },
 
-    create: (cb) => {
+    create: () => {
       let createTableRequest = [
         'CREATE TABLE ',
         'IF NOT EXISTS ',
@@ -71,6 +71,4 @@ module.exports = function(connection) {
       });
     }
   };
-
-  return settings;
 };

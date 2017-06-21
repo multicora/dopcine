@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(connection) {
   const sqlBuilder = require('../services/sqlBuilder.js');
 

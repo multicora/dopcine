@@ -29,7 +29,7 @@ module.exports = function(){
               authorName: authorName
             }
             // onUploadProgress: function(event) || null // progress monitoring
-          });  // returns promise
+          }); // returns promise
         });
       }
     };

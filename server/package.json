@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "istanbul cover _mocha",
+    "start": "gulp serve",
+    "prepush": "gulp prepush; mocha"
   },
   "author": "",
   "dependencies": {
@@ -27,5 +29,15 @@
     "sequelize": "^3.30.4",
     "squel": "^5.10.0",
     "vision": "^4.1.1"
+  },
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.0",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-sequence": "^0.4.6",
+    "husky": "^0.13.4",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.4.2"
   }
 }
