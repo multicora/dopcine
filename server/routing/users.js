@@ -106,4 +106,34 @@ module.exports = function (server, DAL) {
       }
     }
   });
+
+  // POST: /api/reset-password
+  server.route({
+    method: 'POST',
+    path: '/api/reset-password',
+    config: {
+      description: 'Reset password',
+      notes: 'Reseting password',
+      tags: ['api', 'users'],
+      validate: {
+        payload: {
+          email: Joi.string().email().required()
+        }
+      },
+      handler: function (request, reply) {
+        const email = request.payload.email;
+        const emailLink = utils.getServerUrl(request) + '/set-password/';
+
+        usersController.resetPassword(email, emailLink).then(() => {
+          reply();
+        }).catch((err) => {
+          if (err.type === 400) {
+            reply(Boom.badRequest(err.key));
+          } else {
+            reply(Boom.badImplementation(err));
+          }
+        });
+      }
+    }
+  });
 };
