@@ -136,4 +136,41 @@ module.exports = function (server, DAL) {
       }
     }
   });
+
+  // POST /api/set-password
+  server.route({
+    method: 'POST',
+    path: '/api/set-password',
+    config: {
+      description: 'Set new password',
+      notes: 'Setting new password',
+      tags: ['api', 'users'],
+      validate: {
+        payload: {
+          token: Joi.string().required(),
+          password: Joi.string().required(),
+          passwordConfirmation: Joi.string().required()
+        }
+      },
+      handler: function (request, reply) {
+        const token = request.payload.token;
+        const password = request.payload.password;
+        const passwordConfirmation = request.payload.passwordConfirmation;
+
+        usersController.setPassword(
+          password,
+          passwordConfirmation,
+          token
+        ).then(() => {
+          reply();
+        }).catch((err) => {
+          if (err.type === 400) {
+            reply(Boom.badRequest(err.key));
+          } else {
+            reply(Boom.badImplementation(err));
+          }
+        });
+      }
+    }
+  });
 };

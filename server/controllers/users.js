@@ -158,6 +158,27 @@ module.exports = function (DAL) {
       });
     },
 
+    setPassword: (password, passwordConfirmation, token) => {
+      if (password !== passwordConfirmation) {
+        return Promise.reject({
+          type: 400,
+          key: keys.AUTH.PASSWORDS_DO_NOT_MATCH,
+        });
+      } else {
+        return DAL.tokens.get(token).then((tokenObj) =>{
+          if (!tokenObj) {
+            return Promise.reject({
+              type: 400,
+              key: keys.AUTH.TOKEN_IS_INCORRECT,
+            })
+          }
+          const hash = passwordHash.generate(password);
+
+          return DAL.users.setPassword(tokenObj.user, hash);
+        });
+      }
+    }
+
     // inviteUser: (email) => {
     //   return new Promise((resolve, reject) => {
     //     let resetToken = utils.newToken();

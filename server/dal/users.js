@@ -62,12 +62,25 @@ module.exports = function(connection) {
       const id = user.id;
       delete user.id;
       delete user.email;
+      delete user.password;
       delete user.cratedAt;
       const request = sqlBuilder.update()
         .table('users')
         .setFields(parse(user))
         .set('updatedAt', sqlBuilder.str('NOW()'))
         .where(`id = ${id}`)
+        .toString();
+
+      return connection.query(request).spread((res) => {
+        return res;
+      });
+    },
+
+    setPassword: (userId, passwordHash) => {
+      const request = sqlBuilder.update()
+        .table('users')
+        .set('password', passwordHash)
+        .where(`id = "${userId}"`)
         .toString();
 
       return connection.query(request).spread((res) => {
