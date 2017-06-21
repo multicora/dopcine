@@ -167,7 +167,7 @@ module.exports = function (DAL) {
             return Promise.reject({
               type: 400,
               key: keys.AUTH.TOKEN_IS_INCORRECT,
-            })
+            });
           }
           const hash = passwordHash.generate(password);
 
