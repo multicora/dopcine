@@ -139,4 +139,71 @@ module.exports = function (server, DAL) {
       }
     }
   });
+
+  // POST: /api/reset-password
+  server.route({
+    method: 'POST',
+    path: '/api/reset-password',
+    config: {
+      description: 'Reset password',
+      notes: 'Reseting password',
+      tags: ['api', 'users'],
+      validate: {
+        payload: {
+          email: Joi.string().email().required()
+        }
+      },
+      handler: function (request, reply) {
+        const email = request.payload.email;
+        const emailLink = utils.getServerUrl(request) + '/set-password/';
+
+        usersController.resetPassword(email, emailLink).then(() => {
+          reply();
+        }).catch((err) => {
+          if (err.type === 400) {
+            reply(Boom.badRequest(err.key));
+          } else {
+            reply(Boom.badImplementation(err));
+          }
+        });
+      }
+    }
+  });
+
+  // POST /api/set-password
+  server.route({
+    method: 'POST',
+    path: '/api/set-password',
+    config: {
+      description: 'Set new password',
+      notes: 'Setting new password',
+      tags: ['api', 'users'],
+      validate: {
+        payload: {
+          token: Joi.string().required(),
+          password: Joi.string().required(),
+          passwordConfirmation: Joi.string().required()
+        }
+      },
+      handler: function (request, reply) {
+        const token = request.payload.token;
+        const password = request.payload.password;
+        const passwordConfirmation = request.payload.passwordConfirmation;
+
+        usersController.setPassword(
+          password,
+          passwordConfirmation,
+          token
+        ).then(() => {
+          reply();
+        }).catch((err) => {
+          if (err.type === 400) {
+            reply(Boom.badRequest(err.key));
+          } else {
+            reply(Boom.badImplementation(err));
+          }
+        });
+      }
+    }
+  });
 };

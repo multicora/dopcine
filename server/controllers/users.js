@@ -96,37 +96,38 @@ module.exports = function (DAL) {
 
     // verifyPassword: verifyPassword,
 
-    // resetPassword: (email, serverUrl, dataError, serverError) => {
-    //   return new Promise((resolve, reject) => {
-    //     let resetToken = utils.newToken();
-    //     DAL.users.addResetToken(resetToken, email).then((response) => {
-    //       let result = null;
+    resetPassword: (email, emailLink) => {
+      let token = utils.newToken();
 
-    //       if (response.affectedRows) {
-    //         result = templates.resetPassword(serverUrl + '/new-password/' + resetToken);
-    //       }
+      return DAL.users.getUserByEmail(email).then((user) => {
+        if (!user) {
+          return Promise.reject({
+            type: 400,
+            key: keys.AUTH.USER_IS_ABSENT
+          });
+        }
 
-    //       return result;
-    //     }).then( template => {
-    //         const mail = {
-    //           to: email,
-    //           subject: 'Reset password',
-    //           text: template.text,
-    //           html: template.html
-    //         };
+        // Create token
+        return DAL.tokens.create(
+          token,
+          user.id,
+          DAL.tokens.TYPES.RESET
+        );
+      }).then(() => {
+        // Make template
+        return templates.resetPassword(emailLink + token);
+      }).then( template => {
+        // Send the letter
+        const mail = {
+          to: email,
+          subject: 'Reset password',
+          text: template.text,
+          html: template.html
+        };
 
-    //         mailer(config).send(mail).then(
-    //           () => {
-    //             resolve();
-    //           }, (err) => {
-    //             reject(err);
-    //           }
-    //         );
-    //     }, () => {
-    //       reject(serverError);
-    //     });
-    //   });
-    // },
+        return mailer().send(mail);
+      });
+    },
 
     register: (email, password, confirmPassword, emailLink, firstName, lastName) => {
       const confirmToken = utils.newToken();
@@ -179,6 +180,27 @@ module.exports = function (DAL) {
       }).then(() => {
         return;
       });
+    },
+
+    setPassword: (password, passwordConfirmation, token) => {
+      if (password !== passwordConfirmation) {
+        return Promise.reject({
+          type: 400,
+          key: keys.AUTH.PASSWORDS_DO_NOT_MATCH,
+        });
+      } else {
+        return DAL.tokens.get(token).then((tokenObj) =>{
+          if (!tokenObj) {
+            return Promise.reject({
+              type: 400,
+              key: keys.AUTH.TOKEN_IS_INCORRECT,
+            });
+          }
+          const hash = passwordHash.generate(password);
+
+          return DAL.users.setPassword(tokenObj.user, hash);
+        });
+      }
     },
 
     // inviteUser: (email) => {
