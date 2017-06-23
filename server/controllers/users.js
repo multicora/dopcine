@@ -53,6 +53,27 @@ module.exports = function (DAL) {
       });
     },
 
+    verifyUser: (token) => {
+      return DAL.tokens.get(token).then((tokenObj) => {
+        // Check token
+        const result = !tokenObj ? Promise.reject({
+          key: keys.AUTH.TOKEN_IS_INCORRECT,
+          type: 401
+        }) : Promise.resolve(tokenObj);
+
+        return result;
+      }).then((tokenObj) => {
+        // Get user profile
+        return Promise.all([
+          DAL.users.getUserById(tokenObj.user),
+          DAL.usersDetails.getById(tokenObj.user)
+        ]);
+      }).then(response => {
+        const user = response.reduce((res, val) => Object.assign({}, res, val), {});
+        return Promise.resolve(user);
+      });
+    },
+
     confirmEmail: (token) => {
       return DAL.tokens.get(token).then((tokenObj) => {
         // Check token
@@ -108,7 +129,7 @@ module.exports = function (DAL) {
       });
     },
 
-    register: (email, password, confirmPassword, emailLink) => {
+    register: (email, password, confirmPassword, emailLink, firstName, lastName) => {
       const confirmToken = utils.newToken();
       const link = emailLink + confirmToken;
 
@@ -135,6 +156,12 @@ module.exports = function (DAL) {
 
         return DAL.users.register(email, hash);
       }).then((res) => {
+        // create user details if needed
+        return !!firstName || !!lastName
+          ? DAL.usersDetails.create(res.insertId, firstName, lastName)
+            .then(() => Promise.resolve(res))
+          : Promise.resolve(res);
+      }).then((res) => {
         // Add token
         return DAL.tokens.create(confirmToken, res.insertId, DAL.tokens.TYPES.RESET);
       }).then(() => {
@@ -155,8 +182,8 @@ module.exports = function (DAL) {
       });
     },
 
-    setPassword: (password, passwordConfirmation, token) => {
-      if (password !== passwordConfirmation) {
+    setPassword: (password, confirmPassword, token) => {
+      if (password !== confirmPassword) {
         return Promise.reject({
           type: 400,
           key: keys.AUTH.PASSWORDS_DO_NOT_MATCH,

@@ -2,7 +2,7 @@
 
 Build status of the branch `develop`: [ ![Codeship Status for multicora/dopcine](https://app.codeship.com/projects/171a1cc0-3500-0135-8a2f-6aba2a7fe52d/status?branch=develop)](https://app.codeship.com/projects/227004)
 
-## Requironments
+## Requirements
 * MySql
 * Node.js
 
@@ -45,3 +45,32 @@ Tool: `https://github.com/glennjones/hapi-swagger`
 Documentation is available by path `/documentation`
 
 Test commit
+
+## Frontend
+
+Create .env file in "client" folder to specify dev server PORT
+
+```
+PORT=3000
+```
+Edit package.json to specify proxy url, e.g:
+
+```
+"proxy": "http://localhost:3001"
+```
+
+## Run frontend
+
+```
+cd client
+WINDOWS:    cmd.exe /C "set NODE_PATH=src/ && npm run start"
+Unix:       NODE_PATH=src/ && npm run start
+```
+
+## Testing:
+
+use ```npm test``` instead of ```npm run start```
+
+
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+

@@ -17,7 +17,7 @@ module.exports = function (server, DAL) {
       tags: ['api', 'users'],
       validate: {
         payload: {
-          login: Joi.string().required(),
+          email: Joi.string().required(),
           password: Joi.string().required()
         }
       },
@@ -29,10 +29,39 @@ module.exports = function (server, DAL) {
       handler: function (request, reply) {
         const user = request.payload;
 
-        usersController.login(user.login, user.password).then((res) => {
+        usersController.login(user.email, user.password).then((res) => {
           reply({
             token: res
           });
+        }).catch((err) => {
+          if (err.type === 401) {
+            reply(Boom.unauthorized(err.key));
+          } else {
+            reply(Boom.badImplementation(err));
+          }
+        });
+      }
+    }
+  });
+
+  // POST: /api/confirm-email
+  server.route({
+    method: 'POST',
+    path: '/api/verify-user',
+    config: {
+      description: 'User varification',
+      notes: 'User varification by given token',
+      tags: ['api', 'users'],
+      validate: {
+        payload: {
+          token: Joi.string().required()
+        }
+      },
+      handler: function (request, reply) {
+        const token = request.payload.token;
+
+        usersController.verifyUser(token).then((user) => {
+          reply(user);
         }).catch((err) => {
           if (err.type === 401) {
             reply(Boom.unauthorized(err.key));
@@ -86,15 +115,19 @@ module.exports = function (server, DAL) {
           email: Joi.string().email().required(),
           password: Joi.string().required(),
           confirmPassword: Joi.string().required(),
+          firstName: Joi.string().required(),
+          lastName: Joi.string().required(),
         }
       },
       handler: function (request, reply) {
         const email = request.payload.email;
         const password = request.payload.password;
         const confirmPassword = request.payload.confirmPassword;
+        const firstName = request.payload.firstName;
+        const lastName = request.payload.lastName;
         const emailLink = utils.getServerUrl(request) + '/login/';
 
-        usersController.register(email, password, confirmPassword, emailLink).then(() => {
+        usersController.register(email, password, confirmPassword, emailLink, firstName, lastName).then(() => {
           reply();
         }).catch((err) => {
           if (err.type === 400) {
@@ -149,17 +182,17 @@ module.exports = function (server, DAL) {
         payload: {
           token: Joi.string().required(),
           password: Joi.string().required(),
-          passwordConfirmation: Joi.string().required()
+          confirmPassword: Joi.string().required()
         }
       },
       handler: function (request, reply) {
         const token = request.payload.token;
         const password = request.payload.password;
-        const passwordConfirmation = request.payload.passwordConfirmation;
+        const confirmPassword = request.payload.confirmPassword;
 
         usersController.setPassword(
           password,
-          passwordConfirmation,
+          confirmPassword,
           token
         ).then(() => {
           reply();
