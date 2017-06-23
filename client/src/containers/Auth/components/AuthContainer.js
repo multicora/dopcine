@@ -62,13 +62,13 @@ class AuthContainer extends Component {
   }
 
   __onFormSubmit() {
-    let props = {};
+    let props = Object.assign({}, (this.props.setPasswordToken ? {token: this.props.setPasswordToken} : {}));
     let selectedTab = this.props.selectedTab;
     let formFieds = this.__forms[selectedTab].fields;
 
     Object.keys(formFieds).forEach((field) =>
       props[field] = formFieds[field].value
-    );
+    ); 
     typeof(this.props[selectedTab]) === "function" && this.props[selectedTab](props);
   }
 
@@ -117,7 +117,7 @@ class AuthContainer extends Component {
       { selectedTab === "resetPassword" && <Form name="resetPassword" onFormChange={this.__onFormChange.bind(this)}>
         <ResetPassword requestError={requestError} styles={ containerStyles }/>
       </Form> }
-      { selectedTab === "setPassword" && <Form name="resetPassword" onFormChange={this.__onFormChange.bind(this)}>
+      { selectedTab === "setPassword" && <Form name="setPassword" onFormChange={this.__onFormChange.bind(this)}>
         <SetPassword requestError={requestError} styles={ containerStyles }/>
       </Form> }
     </div>);
@@ -134,7 +134,8 @@ const mapStateToProps = state => {
   return ({
     selectedTab: auth.get("selectedTab"),
     requestInProgress: auth.get("requestInProgress"),
-    requestError: auth.get("requestError")
+    requestError: auth.get("requestError"),
+    setPasswordToken: auth.get("setPasswordToken")
   });
 };
 

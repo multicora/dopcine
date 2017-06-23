@@ -182,17 +182,17 @@ module.exports = function (server, DAL) {
         payload: {
           token: Joi.string().required(),
           password: Joi.string().required(),
-          passwordConfirmation: Joi.string().required()
+          confirmPassword: Joi.string().required()
         }
       },
       handler: function (request, reply) {
         const token = request.payload.token;
         const password = request.payload.password;
-        const passwordConfirmation = request.payload.passwordConfirmation;
+        const confirmPassword = request.payload.confirmPassword;
 
         usersController.setPassword(
           password,
-          passwordConfirmation,
+          confirmPassword,
           token
         ).then(() => {
           reply();

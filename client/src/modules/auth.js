@@ -11,13 +11,15 @@ export const REQUEST_INPROGRESS = "auth/REQUEST_INPROGRESS";
 export const REQUEST_COMPLETED = "auth/REQUEST_COMPLETED";
 export const REQUEST_FAILED = "auth/REQUEST_FAILED";
 export const REGISTER = "auth/REGISTER";
+export const SET_PASSWORD_TOKEN = "auth/SET_PASSWORD_TOKEN";
 
 const initialState = Map({
   open: false,
   selectedTab: "login",
   requestInProgress: false,
   requestError: "",
-  requestMessage: ""
+  requestMessage: "",
+  setPasswordToken: false
 });
 
 export default (state = initialState, action) => {
@@ -25,7 +27,11 @@ export default (state = initialState, action) => {
     case TOGGLE_VISIBILITY:
       return initialState.merge({
         open: action.hasOwnProperty("isOpen") ? action.isOpen : !state.get("open"),
-        selectedTab: !state.get("open") ? initialState.get("selectedTab") : state.get("selectedTab")
+        selectedTab: !state.get("open")
+          ? action.selectedTab
+            ? action.selectedTab
+            : initialState.get("selectedTab")
+          : state.get("selectedTab")
       });
 
     case SELECT_TAB:
@@ -50,6 +56,11 @@ export default (state = initialState, action) => {
         requestInProgress: false,
         requestError: action.error,
         requestMessage: action.requestMessage || ""
+      });
+
+    case SET_PASSWORD_TOKEN:
+      return state.merge({
+        ...action
       });
 
     default:
@@ -128,14 +139,27 @@ export const login = ({email, password}) => {
   };
 };
 
-export const setPassword = ({password, confirmPassword}) => {
+
+export const setPasswordToken = ({token}) => {
+
+  return dispatch => {
+    dispatch({
+      type: SET_PASSWORD_TOKEN,
+      open: true,
+      selectedTab: "setPassword",
+      setPasswordToken: token
+    });
+  };
+};
+
+export const setPassword = ({password, confirmPassword, token}) => {
 
   return dispatch => {
     dispatch({
       type: REQUEST_INPROGRESS
     });
 
-    return AuthService.setPassword({password, confirmPassword})
+    return AuthService.setPassword({password, confirmPassword, token})
       .then(response => {
         if (response.error) {
           dispatch({
@@ -146,6 +170,12 @@ export const setPassword = ({password, confirmPassword}) => {
           dispatch({
             type: REQUEST_COMPLETED,
           });
+          setTimeout(() => {
+            dispatch({
+              type: SELECT_TAB,
+              selectedTab: "login"
+            });
+          }, 2700);
         }
       }).catch((err) => {
         console.warn((err.message || err).toString());
@@ -178,6 +208,18 @@ export const resetPassword = ({email}) => {
   };
 };
 
+export const openConfirmEmailDialog = ({token}) => {
+  return dispatch => {
+    dispatch({
+      type: TOGGLE_DIALOG_VISIBILITY,
+      message: "Confirming email...",
+        loaderIcon: "action.loaderIcon",
+        onOpen: "confirmEmail",
+        onOpenProps: {token}
+    });
+  }
+};
+
 export const confirmEmail = ({token}) => {
   return dispatch => {
 
@@ -197,19 +239,18 @@ export const confirmEmail = ({token}) => {
             hasLoader: true,
             loaderIcon: "Success",
           });
-
-          setTimeout(() => {
-            dispatch({
-              type: TOGGLE_DIALOG_VISIBILITY
-            });
-          }, 2500);
-
-          setTimeout(() => {
-            dispatch({
-              type: TOGGLE_VISIBILITY
-            });
-          }, 2700);
         }
+        setTimeout(() => {
+          dispatch({
+            type: TOGGLE_DIALOG_VISIBILITY
+          });
+        }, 2500);
+
+        setTimeout(() => {
+          dispatch({
+            type: TOGGLE_VISIBILITY
+          });
+        }, 2700);
       }).catch((err) => {
         console.warn((err.message || err).toString());
       });

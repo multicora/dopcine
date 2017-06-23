@@ -182,8 +182,8 @@ module.exports = function (DAL) {
       });
     },
 
-    setPassword: (password, passwordConfirmation, token) => {
-      if (password !== passwordConfirmation) {
+    setPassword: (password, confirmPassword, token) => {
+      if (password !== confirmPassword) {
         return Promise.reject({
           type: 400,
           key: keys.AUTH.PASSWORDS_DO_NOT_MATCH,

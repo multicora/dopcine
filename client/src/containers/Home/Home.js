@@ -6,29 +6,33 @@ import Auth from "containers/Auth/Auth";
 import Dialog from "components/Dialog/Dialog";
 import Header from "./components/Header/Header";
 
-import { toggle } from "modules/auth";
+import { toggle, setPasswordToken, openConfirmEmailDialog } from "modules/auth";
 import { verifyUser, selectors } from "modules/session";
-import { toggle as toggleDialog } from "modules/dialog";
 
 class Home extends Component {
 
   componentDidMount() {
-    const token = loadItem("token");
-    token && typeof(this.props.actions.verifyUser) === "function"
-      && this.props.actions.verifyUser({token});
+    // veryfy user using token form localStorage
+    const {actions} = this.props;
+    const sessionToken = loadItem("token");
+    sessionToken && typeof(actions.verifyUser) === "function"
+      && actions.verifyUser({token: sessionToken});
   }
 
-  componentWillReceiveProps(nextProps) {
-    let {actions, location: {token, action}} = nextProps;
+  componentDidUpdate() {
+    // trigger actins on redirect with token
+    const {actions, location: {token, action}} = this.props;
     if (token) {
-      actions.toggleDialog({
-        message: "Confirming email...",
-        loaderIcon: "action.loaderIcon",
-        onOpen: "confirmEmail",
-        onOpenProps: {token}
-      });
+      typeof(actions[action]) === "function" && actions[action]({token});
     }
   }
+
+  // componentWillReceiveProps(nextProps) {
+  //   let {actions, location: {token, action}} = nextProps;
+  //   if (token) {
+  //     typeof(actions[action]) == "function" && actions[action]({token});
+  //   }
+  // }
 
   render() {
     let {actions, children, userProfile} = this.props;
@@ -51,7 +55,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({
     toggle,
-    toggleDialog,
+    setPasswordToken,
+    openConfirmEmailDialog,
     verifyUser
   }, dispatch)
 });

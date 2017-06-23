@@ -14,14 +14,14 @@ const SetPass = props => {
         name="password"
         hintText="Password"
         floatingLabelText="Password"
-        errorText={props.error}
+        errorText={props.requestError || props.error}
         value={props.password || ""}
         onChange={ props.onChange || (() => {}) }
         pattern={/^[a-zA-Z0-9]{6,}$/}
         required/>
       <MaterialInput
-        id="cobfirmPassword"
-        name="cobfirmPassword"
+        id="confirmPassword"
+        name="confirmPassword"
         hintText="confirmPassword"
         floatingLabelText="confirmPassword"
         errorText={props.error}
