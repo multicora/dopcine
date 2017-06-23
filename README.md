@@ -69,7 +69,11 @@ Unix:       NODE_PATH=src/ npm run start
 
 ## Testing:
 
-use ```npm test``` instead of ```npm run start```
+```
+cd client
+WINDOWS:    cmd.exe /C "set NODE_PATH=src/ && npm test"
+Unix:       NODE_PATH=src/ npm test
+```
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
