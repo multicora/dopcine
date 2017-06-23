@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "istanbul cover _mocha",
+    "test": "istanbul cover _mocha -R ./src/**/*test.js",
     "start": "gulp serve",
     "prepush": "gulp prepush; mocha"
   },
