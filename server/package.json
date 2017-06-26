@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "istanbul cover _mocha",
+    "test": "istanbul cover _mocha -- -R spec",
     "start": "gulp serve",
-    "prepush": "gulp prepush; mocha"
+    "prepush": "gulp prepush; npm test"
   },
   "author": "",
   "dependencies": {
@@ -38,6 +38,7 @@
     "gulp-sequence": "^0.4.6",
     "husky": "^0.13.4",
     "istanbul": "^0.4.5",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "proxyquire": "^1.8.0"
   }
 }
