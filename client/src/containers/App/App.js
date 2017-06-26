@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import Home from "containers/Home/Home";
+import PageUpload from "containers/PageUpload/PageUpload";
 
 const redirectActions = {
   "login": "openConfirmEmailDialog",
@@ -27,6 +28,7 @@ export default () => (
         <Home {...props}>
           <Route path="/login/:token?" render={ getRedirect }/>
           <Route path="/set-password/:token?" render={ getRedirect }/>
+          <Route path="/upload" component={ PageUpload }/>
         </Home>
       }/>
     </main>

@@ -49,8 +49,8 @@ function makeMaterial(WrappedComponent) {
 
     __getFormError(props, value) {
       let validations = {
-        required: (!props.required || props.required) && !!value,
-        pattern: (!props.pattern || !!props.pattern) && (props.pattern).test(value)
+        required: !props.required || (props.required && !!value),
+        pattern: !props.pattern || (!!props.pattern && (props.pattern).test(value))
       };
 
       return ERRORS[Object.keys(validations).filter(rule => !validations[rule])[0]];
