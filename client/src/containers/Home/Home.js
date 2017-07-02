@@ -1,6 +1,6 @@
-import React, {Component} from "react"
-import { bindActionCreators } from "redux"
-import { connect } from "react-redux"
+import React, {Component} from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import { loadItem } from "helpers/localStorage";
 import Auth from "containers/Auth/Auth";
 import Dialog from "components/Dialog/Dialog";
