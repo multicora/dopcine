@@ -7,9 +7,6 @@ const mailer = require('../services/mailer.js');
 const utils = require('../utils.js');
 const templates = require('../services/templates.js')();
 
-// const EMAIL_IS_NOT_CONFIRMED = 'EMAIL_IS_NOT_CONFIRMED';
-// const USERNAME_OR_PASSWORD_IS_INCORRECT = 'USERNAME_OR_PASSWORD_IS_INCORRECT';
-
 module.exports = function (DAL) {
 
   return {

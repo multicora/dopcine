@@ -2,7 +2,7 @@
 
 const migrator = require('./migrator.js');
 
-module.exports = function (DAL) {
+module.exports = function (DAL, connection) {
   const migrationOptions = {
     setDbVersion: setDbVersion,
     getDbVersion: getDbVersion,
@@ -11,6 +11,7 @@ module.exports = function (DAL) {
       require('./scripts/v002.js')(DAL),
       require('./scripts/v003.js')(DAL),
       require('./scripts/v004.js')(DAL),
+      require('./scripts/v005.js')(connection),
     ]
   };
 

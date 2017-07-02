@@ -15,5 +15,8 @@ module.exports = function(connection){
   // Tokens
   DAL.tokens = require('./tokens.js')(connection);
 
+  // Videos
+  DAL.videos = require('./videos.js')(connection);
+
   return DAL;
 };

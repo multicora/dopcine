@@ -47,9 +47,9 @@ export default (state = initialState, action) => {
       });
 
     case REQUEST_COMPLETED:
-      return initialState.set({
-        requestMessage: action.requestMessage || ""
-      });
+      return initialState.set(
+        "requestMessage", action.requestMessage || ""
+      );
 
     case REQUEST_FAILED:
       return state.merge({
