@@ -34,17 +34,4 @@ module.exports = function (server, DAL) {
 
   // Should be commented
   // require('./devTools.js')(server, DAL);
-
-  //GET /api/test
-  server.route({
-    method: 'GET',
-    path: '/api/test',
-    config: {
-      auth: 'simple',
-      handler: function (request, reply) {
-        console.log(request.auth.credentials);
-        reply('ok');
-      }
-    }
-  });
 };
