@@ -13,6 +13,7 @@ module.exports = function (server, DAL) {
       description: 'Upload file',
       notes: 'Upload file to the storage, max sze 5Gb',
       tags: ['api', 'files'],
+      auth: 'simple',
       payload: {
         output: 'stream',
         parse: true,
@@ -31,13 +32,12 @@ module.exports = function (server, DAL) {
           published: Joi.boolean()
         }
       },
-      // auth: 'simple',
 
       handler: function (request, reply) {
         if (!request.payload.file) {
           reply( Boom.badRequest('Property "file" is absent') );
         } else {
-           videoCtrl.addVideo(request.payload).then((res) => {
+           videoCtrl.addVideo(request.payload, request.auth.credentials).then((res) => {
             reply();
           }).catch((err) => {
             if (err.type === 401) {

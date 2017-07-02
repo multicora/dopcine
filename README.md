@@ -7,7 +7,7 @@ Build status of the branch `develop`: [ ![Codeship Status for multicora/dopcine]
 * Node.js
 
 ## User config
-Create `/server/userConfig.js` file that exports JSON. It will be merged with default config.
+Create `/server/src/userConfig.js` file that exports JSON. It will be merged with default config.
 
 Required properties
 ```javascript
@@ -20,7 +20,7 @@ module.exports = {
     accountId: <accountId>,
     applicationKey: <applicationKey>,
     bucketId: <bucketId>
-  }
+  },
   db: {
     user: <user name>,
     password: <password>
@@ -37,7 +37,7 @@ module.exports = {
 ## Run backend
 ```
 cd server
-node index.js
+npm start
 ```
 
 ## Documentation
@@ -63,7 +63,7 @@ Edit package.json to specify proxy url, e.g:
 
 ```
 cd client
-WINDOWS:    cmd.exe /C "set NODE_PATH=src/ && npm run start"
+WINDOWS:    cmd.exe /C "set NODE_PATH=src/&& npm run start"
 Unix:       NODE_PATH=src/ npm run start
 ```
 

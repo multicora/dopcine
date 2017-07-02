@@ -7,9 +7,9 @@ const keys = require('../responseKeys.js');
 module.exports = function (DAL) {
 
   return {
-    addVideo: (video) => {
+    addVideo: (video, {user}) => {
       const file = video.file;
-      const metadata = Object.assign({}, video);
+      const metadata = Object.assign({}, video, {user});
       delete metadata.file;
 
       return require('../services/storage.js')(DAL).then( storage => {

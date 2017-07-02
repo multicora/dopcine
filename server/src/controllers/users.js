@@ -50,27 +50,6 @@ module.exports = function (DAL) {
       });
     },
 
-    verifyUser: (token) => {
-      return DAL.tokens.get(token).then((tokenObj) => {
-        // Check token
-        const result = !tokenObj ? Promise.reject({
-          key: keys.AUTH.TOKEN_IS_INCORRECT,
-          type: 401
-        }) : Promise.resolve(tokenObj);
-
-        return result;
-      }).then((tokenObj) => {
-        // Get user profile
-        return Promise.all([
-          DAL.users.getUserById(tokenObj.user),
-          DAL.usersDetails.getById(tokenObj.user)
-        ]);
-      }).then(response => {
-        const user = response.reduce((res, val) => Object.assign({}, res, val), {});
-        return Promise.resolve(user);
-      });
-    },
-
     confirmEmail: (token) => {
       return DAL.tokens.get(token).then((tokenObj) => {
         // Check token
@@ -90,8 +69,6 @@ module.exports = function (DAL) {
         return DAL.users.update(user);
       });
     },
-
-    // verifyPassword: verifyPassword,
 
     resetPassword: (email, emailLink) => {
       let token = utils.newToken();
@@ -200,6 +177,23 @@ module.exports = function (DAL) {
       }
     },
 
+    create: (email, password) => {
+      return DAL.users.getUserByEmail(email).then((user) => {
+        // Check user
+        const result = user ? Promise.reject({
+          key: keys.AUTH.EMAIL_ALREADY_IN_USE,
+          type: 400
+        }) : Promise.resolve();
+
+        return result;
+      }).then(() => {
+        // Create user
+        const hash = passwordHash.generate(password);
+
+        return DAL.users.register(email, hash);
+      });
+    },
+
     // inviteUser: (email) => {
     //   return new Promise((resolve, reject) => {
     //     let resetToken = utils.newToken();
@@ -230,55 +224,26 @@ module.exports = function (DAL) {
     //   });
     // },
 
-    // getUserByToken: (token) => {
-    //   let actionsArr;
-    //   let rolesArr;
-    //   let user;
+    getUserByToken: (token) => {
+      return DAL.tokens.get(token).then((tokenObj) => {
+        // Check token
+        const result = !tokenObj ? Promise.reject({
+          key: keys.AUTH.TOKEN_IS_INCORRECT,
+          type: 401
+        }) : Promise.resolve(tokenObj);
 
-    //   return DAL.users.getUserByToken(token).then((res) => {
-    //     user = res;
-
-    //     return DAL.roles.getRolesByUserId(user.id);
-    //   }).then((roles) => {
-    //     let rolesPromisies = roles.map(function(role) {
-    //       return DAL.roles.getRoleById(role.id_role);
-    //     });
-
-    //     return Promise.all(rolesPromisies);
-    //   }).then((roles) => {
-    //     rolesArr = roles.map(function(role) {
-    //       return role.name;
-    //     });
-
-    //     let getActionsPromisies = roles.map(function(role) {
-    //       return DAL.actions.getActionsByRoleId(role.id);
-    //     });
-
-    //     return Promise.all(getActionsPromisies);
-    //   }).then((actions) => {
-    //     let actionsId = [];
-    //     if (actions.length > 0) {
-    //       actionsId = actions[0].map(function(action) {
-    //         return action.id_action;
-    //       });
-    //     }
-
-    //     let actionsPromisies = actionsId.map(function(action) {
-    //       return DAL.actions.getActionById(action);
-    //     });
-
-    //     return Promise.all(actionsPromisies);
-    //   }).then((actions) => {
-    //     actionsArr = actions.map(function(action) {
-    //       return action.name;
-    //     });
-    //   }).then(() => {
-    //     user.roles = rolesArr;
-    //     user.actions = actionsArr;
-
-    //     return user;
-    //   });
-    // },
+        return result;
+      }).then((tokenObj) => {
+        // Get user profile
+        return Promise.all([
+          DAL.users.getUserById(tokenObj.user),
+          DAL.usersDetails.getById(tokenObj.user)
+        ]);
+      }).then(response => {
+        const user = response.reduce((res, val) => Object.assign({}, res, val), {});
+        return Promise.resolve(user);
+      });
+    },
 
     // parseToken: (token) => {
     //   token = token || '';

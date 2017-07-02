@@ -2,7 +2,9 @@
 
 // const _ = require('lodash');
 const Promise = require('promise');
+
 const config = require('./config.js');
+const auth = require('./auth.js');
 // const migrations = require('./migrations/migrations');
 
 module.exports = function () {
@@ -31,8 +33,8 @@ module.exports = function () {
   // }).then( () => {
     return registerStaticFilesServer(server);
   }).then( () => {
-  //   return registerAuth(server, dal);
-  // }).then( () => {
+    return auth(server, dal);
+  }).then( () => {
     return registerRouting(server, dal);
   }).then( () => {
     showSuccessMessage(server);
@@ -167,33 +169,3 @@ function runServer(server) {
     }
   );
 }
-
-// function registerAuth(server, DAL) {
-//   const usersController = require('./controllers/users.js')(DAL);
-
-//   return new Promise(function (resolve, reject) {
-//     const AuthHeader = require('hapi-auth-header');
-
-//     server.register(AuthHeader, (err) => {
-//       if (err) {
-//         reject();
-//       } else {
-//         server.auth.strategy('simple', 'auth-header', {
-//           validateFunc: function (tokens, callback) {
-//             let tokenName = 'x-biz-token';
-
-//             usersController.getUserByToken(tokens[tokenName]).then(
-//               (user) => {
-//                 return callback(null, true, user);
-//               },
-//               () => {
-//                 return callback(null, false, null);
-//               }
-//             );
-//           }
-//         });
-//         resolve();
-//       }
-//     });
-//   });
-// }

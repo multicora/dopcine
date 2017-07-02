@@ -1,5 +1,9 @@
 const FORM_DATA = "FORM_DATA";
 
+export const getAuthHeaders = (token) => {
+  return { Authorization: `auth ${token}` };
+};
+
 const errorHelper = (response) => {
   return response.text().then(function(text) {
     return text ? JSON.parse(text) : {};
