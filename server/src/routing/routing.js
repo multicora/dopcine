@@ -31,5 +31,20 @@ module.exports = function (server, DAL) {
 
   require('./files.js')(server, DAL);
   require('./users.js')(server, DAL);
-  // require('./routing/conversations.js')(server, DAL);
+
+  // Should be commented
+  // require('./devTools.js')(server, DAL);
+
+  //GET /api/test
+  server.route({
+    method: 'GET',
+    path: '/api/test',
+    config: {
+      auth: 'simple',
+      handler: function (request, reply) {
+        console.log(request.auth.credentials);
+        reply('ok');
+      }
+    }
+  });
 };
