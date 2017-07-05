@@ -22,25 +22,28 @@ function makeMaterial(WrappedComponent) {
       super(props);
 
       this.state = {
-        value: props.value,
+        value: props.value || "",
         isDirty: props.isDirty
       };
     }
 
     componentWillMount() {
       typeof(this.context.onFormChange) === "function"
-        && this.context.onFormChange({ name: this.props.name, isValid: !this.__getFormError(this.props, this.props.value), isDirty: false });
+        && this.context.onFormChange({
+          name: this.props.name,
+          isValid: !this.__getFormError(this.props, this.props.value),
+          isDirty: false,
+          ...(!!this.state.value ? {value: this.state.value} : {})
+        });
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-      (!!this.props.isDirty !== !!nextProps.isDirty || this.props.value !== nextProps.value)
-        && this.setState({isDirty: nextProps.isDirty});
-        console.log(!!this.props.isDirty !== !!nextProps.isDirty || this.props.value !== nextProps.value);
+      (!!this.state.isDirty !== !!nextProps.isDirty || this.state.value !== nextProps.value)
+        && this.setState({isDirty: nextProps.isDirty, value: nextProps.value || ""});
     }
 
     shouldComponentUpdate(nextProps, nextState) {
       return nextProps.errorText !== this.props.errorText
-        || nextProps.isDirty !== this.props.isDirty
         || nextState.isDirty !== this.state.isDirty
         || nextState.value !== this.state.value;
     }
@@ -57,7 +60,11 @@ function makeMaterial(WrappedComponent) {
       const error = this.__getFormError(this.props, newValue);
 
       typeof(this.context.onFormChange) === "function"
-        && this.context.onFormChange({ name: target.name || this.props.name, isValid: !error, value: newValue, isDirty: true });
+        && this.context.onFormChange({
+          name: target.name || this.props.name,
+          isValid: !error,
+          value: newValue,
+          isDirty: true });
       this.setState({ value: newValue, isDirty: true });
     }
 

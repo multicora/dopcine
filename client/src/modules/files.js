@@ -77,13 +77,11 @@ export const addVideo = (formData) => {
 
 
 export const setUploadCompleted = (isCompleted) => {
-  return dispatch => {
-    dispatch({
-      type: SET_UPLOAD_COMPLETED,
-      isCompleted
-    });
-  }
-};
+  return {
+    type: SET_UPLOAD_COMPLETED,
+    isCompleted: isCompleted
+  };
+}
 // selectors
 
 // selector

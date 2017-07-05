@@ -35,16 +35,22 @@ const categories = [
   <MenuItem key={3} value={3} primaryText="Cities" />
 ];
 
-const prices = [
-  <MenuItem key={1} value={1} primaryText="EUR" />,
-  <MenuItem key={2} value={2} primaryText="USD" />,
-  <MenuItem key={3} value={3} primaryText="JPY" />
+// TODO: import from somewhere
+const currency = [
+  {value: 1, text: "EUR"},
+  {value: 2, text: "USD"},
+  {value: 3, text: "JPY"},
 ];
+
+const currencyOptions = currency.map((currency) =>
+  <MenuItem key={currency.value} value={currency.value} primaryText={currency.text} />,
+);
 
 class PageUpload extends Component {
 
   __formName = "uploadForm";
   __form = false;
+  __file = false;
 
   constructor(props) {
     super(props);
@@ -56,38 +62,40 @@ class PageUpload extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.uploadCompleted !== this.props.uploadCompleted && nextProps.uploadCompleted) {
-      this.state.shouldUploadAnother ? this.__clearForm() : push("/");
-    }
+  componentDidMount() {
+    this.props.uploadCompleted
+      && typeof(this.props.actions.setUploadCompleted) === "function"
+      && this.props.actions.setUploadCompleted(false);
   }
 
-  // componentDidUpdate() {
-
-  // }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.uploadCompleted !== this.props.uploadCompleted && nextProps.uploadCompleted) {
+      this.state.shouldUploadAnother ? this.__clearForm() : this.props.actions.push("/uploads");
+    }
+  }
 
   __onFormChange(form) {
     !this.__form && (this.__form = {name: form.formName, fields: {}});
     this.__form.fields[form.name] = form;
 
-    let isFormValid = this.__isFormValid(this.__form);
+    let isFormValid = this.__isFormValid();
     isFormValid !== this.state.isFormValid &&  this.setState({isFormValid});
   }
 
-  __isFormValid(form) {
-    return form
-      && this.state.file
-      && !Object.keys(form.fields).some((field) => !form.fields[field].isValid);
+  __isFormValid() {
+    return !!this.__form
+      && !!this.__file
+      && !Object.keys(this.__form.fields).some((field) => !this.__form.fields[field].isValid);
   }
 
   __onFileUpload(event) {
-    const file = event.target.files[0];
+    this.__file = event.target.files[0];
 
-    let isFormValid = this.__isFormValid(this.__form);
+    let isFormValid = this.__isFormValid();
     if (isFormValid !== this.state.isFormValid) {
-      this.setState({isFormValid, file});
+      this.setState({isFormValid, hasFileUploaded: !!this.__file});
     } else {
-      this.setState({file});
+      this.__file !== this.state.hasFileUploaded && this.setState({hasFileUploaded: !!this.__file});
     }
   }
 
@@ -98,7 +106,9 @@ class PageUpload extends Component {
       this.__form.fields[field].value = "";
     });
 
-    this.setState({isFormDirty: false, isFormValid: false}, () => {
+    this.__file = false;
+
+    this.setState({isFormDirty: false, isFormValid: false, hasFileUploaded: false}, () => {
       this.props.actions.setUploadCompleted(false);
     })
   }
@@ -119,21 +129,24 @@ class PageUpload extends Component {
       return;
     }
 
-    formData.append("file", this.state.file);
+    formData.append("file", this.__file);
     formData.append("published", !!isPublished);
     for ( var key in this.__form.fields ) {
-      formData.append(key, this.__form.fields[key].value);
+      formData.append(key, this.__form.fields[key].value || undefined);
     }
+    formData.set("currency", currency.filter(el =>
+      parseInt(el.value) === parseInt(formData.get("currency"))
+    )[0].text);
 
     typeof(this.props.actions.addVideo) === "function"
       && this.props.actions.addVideo(formData);
   }
 
   render() {
-    const { file, isFormValid, isFormDirty } = this.state;
+    const { hasFileUploaded, isFormValid, isFormDirty } = this.state;
     const dirtyObject = {}, formValues = {};
     const fileInputStyles = {
-      color: file
+      color: hasFileUploaded
         ? "green"
         : isFormDirty
           ? "red"
@@ -214,7 +227,7 @@ class PageUpload extends Component {
               floatingLabelText="Currency"
               value={ formValues.currency || 1 }
             >
-              { prices }
+              { currencyOptions }
             </MaterialSelect>
           </div>
           <div className={ styles.descriptionInput }>
@@ -284,7 +297,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({
     addVideo,
-    setUploadCompleted
+    setUploadCompleted,
+    push: (route) => push(route)
   }, dispatch)
 });
 

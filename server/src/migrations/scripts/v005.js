@@ -19,10 +19,11 @@ module.exports = function(connection) {
           'owner varchar(255), ',
           'published BOOLEAN NOT NULL DEFAULT false, ',
           'moderated BOOLEAN NOT NULL DEFAULT false, ',
+          'user int(255), ',
           'cratedAt DATETIME NOT NULL, ',
           'updatedAt DATETIME NOT NULL, ',
           'PRIMARY KEY (id), ',
-          'FOREIGN KEY (id) REFERENCES users(id)',
+          'FOREIGN KEY (user) REFERENCES users(id)',
         ') '
       ].join('');
 

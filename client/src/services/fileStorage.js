@@ -1,5 +1,5 @@
 import FetchAdapter, { getAuthHeaders } from "helpers/fetchHelper.js";
-import {loadItem, saveItem} from "helpers/localStorage";
+import { loadItem } from "helpers/localStorage";
 
 const headers = { ...getAuthHeaders(loadItem("token")) };
 

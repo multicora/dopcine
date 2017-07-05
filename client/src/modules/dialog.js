@@ -37,25 +37,21 @@ export default (state = initialState, action) => {
 }
 
 export const toggle = ({message, hasLoader, loaderIcon, onOpen, onOpenProps}) => {
-  return dispatch => {
-    dispatch({
-      type: TOGGLE_VISIBILITY,
-      message,
-      hasLoader,
-      loaderIcon,
-      onOpen,
-      onOpenProps
-    });
+  return {
+    type: TOGGLE_VISIBILITY,
+    message,
+    hasLoader,
+    loaderIcon,
+    onOpen,
+    onOpenProps
   };
 };
 
 export const setContent = ({message, hasLoader, loaderIcon}) => {
-  return dispatch => {
-    dispatch({
-      type: SET_CONTENT,
-      message,
-      hasLoader,
-      loaderIcon
-    });
+  return {
+    type: SET_CONTENT,
+    message,
+    hasLoader,
+    loaderIcon
   };
 };
