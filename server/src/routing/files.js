@@ -37,7 +37,7 @@ module.exports = function (server, DAL) {
         if (!request.payload.file) {
           reply( Boom.badRequest('Property "file" is absent') );
         } else {
-           videoCtrl.addVideo(request.payload, request.auth.credentials).then((res) => {
+           videoCtrl.addVideo(request.payload, request.auth.credentials).then(() => {
             reply();
           }).catch((err) => {
             if (err.type === 401) {
