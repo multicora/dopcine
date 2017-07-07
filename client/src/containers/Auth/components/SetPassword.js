@@ -15,7 +15,6 @@ const SetPass = props => {
         hintText="Password"
         floatingLabelText="Password"
         errorText={props.requestError || props.error}
-        value={props.password || ""}
         onChange={ props.onChange || (() => {}) }
         pattern={/^[a-zA-Z0-9]{6,}$/}
         required/>
@@ -25,7 +24,6 @@ const SetPass = props => {
         hintText="confirmPassword"
         floatingLabelText="confirmPassword"
         errorText={props.error}
-        value={props.confirmPassword || ""}
         onChange={ props.onChange || (() => {}) }
         pattern={/^[a-zA-Z0-9]{6,}$/}
         required/>

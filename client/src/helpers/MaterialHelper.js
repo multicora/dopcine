@@ -20,22 +20,25 @@ function makeMaterial(WrappedComponent) {
         value: props.value || "",
         isDirty: props.isDirty || false
       };
-      typeof(context.onFormChange) === "function"
-        && context.onFormChange({
-          name: props.name,
-          isValid: !this.__getFormError(props, this.state.value),
+    }
+
+    componentWillMount() {
+      typeof(this.context.onFormChange) === "function"
+        && this.context.onFormChange({
+          name: this.props.name,
+          isValid: !this.__getFormError(this.props, this.state.value),
           isDirty: false,
           ...(!!this.state.value ? {value: this.state.value} : {})
         });
     }
 
-    componentDidUpdate() {
+    componentWillUpdate(nextProps, nextState) {
       typeof(this.context.onFormChange) === "function"
         && this.context.onFormChange({
           name: this.props.name,
-          isValid: !this.__getFormError(this.props, this.state.value),
-          isDirty: this.state.isDirty,
-          ...(!!this.state.value ? {value: this.state.value} : {})
+          isValid: !this.__getFormError(this.props, nextState.value),
+          isDirty: nextState.isDirty,
+          ...(!!nextState.value ? {value: nextState.value} : {})
         });
     }
 
@@ -61,17 +64,9 @@ function makeMaterial(WrappedComponent) {
     }
 
     __onChange(e, index, value) {
-      // treat as selsct if value is present, as input otherwise
-      const target = e.target;
+      // treat as select if value is present, as input otherwise
       const newValue = value || e.target.value;
-      const error = this.__getFormError(this.props, newValue);
 
-      typeof(this.context.onFormChange) === "function"
-        && this.context.onFormChange({
-          name: target.name || this.props.name,
-          isValid: !error,
-          value: newValue,
-          isDirty: true });
       this.setState({ value: newValue, isDirty: true });
     }
 

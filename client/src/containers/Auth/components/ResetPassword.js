@@ -15,7 +15,6 @@ const ResetPass = props => {
         hintText="Email"
         floatingLabelText="Email"
         errorText={props.requestError || props.error}
-        value={props.email || ""}
         onChange={ props.onChange || (() => {}) }
         pattern={/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/}
         required/>
