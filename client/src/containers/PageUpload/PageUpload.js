@@ -49,8 +49,8 @@ const currencyOptions = currency.map((currency) =>
 class PageUpload extends Component {
 
   __formName = "uploadForm";
-  __form = false;
-  __file = false;
+  __form = null;
+  __file = null;
 
   constructor(props) {
     super(props);
@@ -135,7 +135,7 @@ class PageUpload extends Component {
       formData.append(key, this.__form.fields[key].value || undefined);
     }
     formData.set("currency", currency.filter(el =>
-      parseInt(el.value) === parseInt(formData.get("currency"))
+      parseInt(el.value, 10) === parseInt(formData.get("currency"), 10)
     )[0].text);
 
     typeof(this.props.actions.addVideo) === "function"
@@ -153,7 +153,7 @@ class PageUpload extends Component {
           :"rgba(0 ,0, 0, .87)"
     }
 
-    this.__form.fields && Object.keys(this.__form.fields).forEach((field) => {
+    this.__form && this.__form.fields && Object.keys(this.__form.fields).forEach((field) => {
       dirtyObject[field] = this.__form.fields[field].isDirty;
       formValues[field] = this.__form.fields[field].value;
     });
@@ -170,7 +170,11 @@ class PageUpload extends Component {
               containerElement="label"
               icon={<i style={ fileInputStyles } className="material-icons">file_upload</i>}
             >
-              <input onChange={ this.__onFileUpload.bind(this) } type="file" className={ styles.fileInput }/>
+              <input
+                onChange={ this.__onFileUpload.bind(this) }
+                onClick={(event) => { event.target.value = null; }}
+                type="file"
+                className={ styles.fileInput }/>
             </RaisedButton>
           </div>
         </div>
@@ -222,6 +226,7 @@ class PageUpload extends Component {
               value={formValues.price || ""}
               required/>
             <MaterialSelect
+              isDirty={dirtyObject.currency}
               name="currency"
               className={ styles.currencyInput }
               floatingLabelText="Currency"

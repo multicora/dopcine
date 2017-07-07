@@ -16,9 +16,6 @@ export default (state = initialState, action) => {
         "uploadCompleted", !!action.isCompleted
       );
 
-    // case SAVE_USER_PROFILE:
-    //   return state.set("user", action.user);
-
     default:
       return state;
   }

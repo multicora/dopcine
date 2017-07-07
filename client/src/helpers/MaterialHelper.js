@@ -13,33 +13,40 @@ function makeMaterial(WrappedComponent) {
       onFormChange: PropTypes.func
     };
 
-    static defaultProps = {
-      value: "",
-      isDirty: false
-    }
-
-    constructor(props) {
+    constructor(props, context) {
       super(props);
 
       this.state = {
         value: props.value || "",
-        isDirty: props.isDirty
+        isDirty: props.isDirty || false
       };
-    }
-
-    componentWillMount() {
-      typeof(this.context.onFormChange) === "function"
-        && this.context.onFormChange({
-          name: this.props.name,
-          isValid: !this.__getFormError(this.props, this.props.value),
+      typeof(context.onFormChange) === "function"
+        && context.onFormChange({
+          name: props.name,
+          isValid: !this.__getFormError(props, this.state.value),
           isDirty: false,
           ...(!!this.state.value ? {value: this.state.value} : {})
         });
     }
 
+    componentDidUpdate() {
+      typeof(this.context.onFormChange) === "function"
+        && this.context.onFormChange({
+          name: this.props.name,
+          isValid: !this.__getFormError(this.props, this.state.value),
+          isDirty: this.state.isDirty,
+          ...(!!this.state.value ? {value: this.state.value} : {})
+        });
+    }
+
     componentWillReceiveProps(nextProps, nextState) {
-      (!!this.state.isDirty !== !!nextProps.isDirty || this.state.value !== nextProps.value)
-        && this.setState({isDirty: nextProps.isDirty, value: nextProps.value || ""});
+      if ((!!this.state.isDirty !== !!nextProps.isDirty && nextProps.isDirty !== undefined)
+        || (this.state.value !== nextProps.value && nextProps.value !== undefined)) {
+        this.setState({
+          isDirty: nextProps.isDirty,
+          value: nextProps.value || ""
+        });
+      }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
