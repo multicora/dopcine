@@ -91,11 +91,13 @@ function makeMaterial(WrappedComponent) {
     render() {
       const { value, isDirty } = this.state;
       const { errorText} = this.props;
-
       const error = this.__getFormError(this.props, value);
 
+      let props = Object.assign({}, this.props);
+      delete props.isDirty;
+
       return <WrappedComponent
-        {...this.props}
+        {...props}
         value={value}
         onChange={ this.__onChange.bind(this) }
         errorText={ isDirty && (errorText || error) }

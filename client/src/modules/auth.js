@@ -135,6 +135,29 @@ export const login = ({email, password}) => {
   };
 };
 
+export const logout = () => {
+
+  return dispatch => {
+    return AuthService.logout()
+      .then(response => {
+        if (response.error) {
+          // TODO: add error handler
+          // dispatch({
+          //   type: REQUEST_FAILED,
+          //   error: response ? response.message : "An error occured in Auth \"Login\" call"
+          // });
+        } else {
+          dispatch({
+            type: ON_LOGIN,
+            token: undefined
+          });
+        }
+      }).catch((err) => {
+        console.warn((err.message || err).toString());
+      });
+  };
+};
+
 
 export const setPasswordToken = ({token}) => {
   return {

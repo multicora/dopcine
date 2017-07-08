@@ -7,6 +7,9 @@ export default {
   login: (data) => {
     return FetchAdapter("POST", "/api/login", data);
   },
+  logout: (data) => {
+    return FetchAdapter("POST", "/api/logout");
+  },
   resetPassword: (data) => {
     return FetchAdapter("POST", "/api/reset-password", data);
   },

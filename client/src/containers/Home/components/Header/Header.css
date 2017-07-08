@@ -16,4 +16,7 @@
 .rightActions {
   display: flex;
   align-items: center;
+  height: 100%;
+  padding-bottom: 8px;
+  box-sizing: border-box;
 }
