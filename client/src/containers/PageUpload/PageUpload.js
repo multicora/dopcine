@@ -172,7 +172,7 @@ class PageUpload extends Component {
             >
               <input
                 onChange={ this.__onFileUpload.bind(this) }
-                onTouchTap={(event) => { event.target.value = null; }}
+                onClick={(event) => { event.target.value = null; }}
                 type="file"
                 className={ styles.fileInput }/>
             </RaisedButton>
@@ -230,13 +230,15 @@ class PageUpload extends Component {
               name="currency"
               className={ styles.currencyInput }
               floatingLabelText="Currency"
-              value={ formValues.currency || 1 }
+              defaultValue={1}
+              value={ formValues.currency }
             >
               { currencyOptions }
             </MaterialSelect>
           </div>
           <div className={ styles.descriptionInput }>
             <MaterialTextField
+              isDirty={dirtyObject.description}
               className={ styles.descriptionTextField }
               fullWidth
               floatingLabelText="Add description"
@@ -249,6 +251,7 @@ class PageUpload extends Component {
           </div>
           <div className={ styles.keywordsInput }>
             <MaterialInput
+              isDirty={dirtyObject.keywords}
               fullWidth
               id="keywords"
               name="keywords"
@@ -261,6 +264,7 @@ class PageUpload extends Component {
           <div className={ styles.ownerInput }>
             <MaterialInput
               fullWidth
+              isDirty={dirtyObject.owner}
               id="owner"
               name="owner"
               hintText="Owner"

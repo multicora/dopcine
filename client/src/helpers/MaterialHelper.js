@@ -28,7 +28,12 @@ function makeMaterial(WrappedComponent) {
           name: this.props.name,
           isValid: !this.__getFormError(this.props, this.state.value),
           isDirty: false,
-          ...(!!this.state.value ? {value: this.state.value} : {})
+          ...(!!this.state.value
+                ? {value: this.state.value}
+                : this.props.defaultValue
+                  ? {value: this.props.defaultValue}
+                  : {}
+              )
         });
     }
 
@@ -47,7 +52,11 @@ function makeMaterial(WrappedComponent) {
         || (this.state.value !== nextProps.value && nextProps.value !== undefined)) {
         this.setState({
           isDirty: nextProps.isDirty,
-          value: nextProps.value || ""
+          value: nextProps.value
+            ? nextProps.value
+            : this.props.defaultValue
+              ? this.props.defaultValue
+              : ""
         });
       }
     }
