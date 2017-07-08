@@ -29,7 +29,7 @@ const Login = props => {
           pattern={/^[a-zA-Z0-9]{6,}$/}
           required/>
         </div>
-        <div onClick={props.onForgotClick} style={{
+        <div onTouchTap={props.onForgotClick} style={{
           "color": "red",
           "textDecoration": "underline",
           "marginTop": "20px",

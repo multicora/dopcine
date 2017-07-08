@@ -172,7 +172,7 @@ class PageUpload extends Component {
             >
               <input
                 onChange={ this.__onFileUpload.bind(this) }
-                onClick={(event) => { event.target.value = null; }}
+                onTouchTap={(event) => { event.target.value = null; }}
                 type="file"
                 className={ styles.fileInput }/>
             </RaisedButton>
@@ -277,13 +277,13 @@ class PageUpload extends Component {
               labelPosition="right"/>
           </div>
           <RaisedButton
-            onClick={ this.__onFormSubmit.bind(this) }
+            onTouchTap={ this.__onFormSubmit.bind(this) }
             disabled={ !isFormValid && isFormDirty }
             className={ styles.saveBtn }
             label="save"
             primary={true}/>
           <RaisedButton
-            onClick={ this.__onFormSubmit.bind(this, {isPublished: true}) }
+            onTouchTap={ this.__onFormSubmit.bind(this, {isPublished: true}) }
             disabled={ !isFormValid && isFormDirty }
             label="publish"
             secondary={true}/>

@@ -1,12 +1,13 @@
 import React, {Component} from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { push } from "react-router-redux";
 import { loadItem } from "helpers/localStorage";
 import Auth from "containers/Auth/Auth";
 import Dialog from "components/Dialog/Dialog";
 import Header from "./components/Header/Header";
 
-import { toggle, setPasswordToken, openConfirmEmailDialog } from "modules/auth";
+import { toggle } from "modules/auth";
 import { verifyUser, selectors } from "modules/session";
 
 class Home extends Component {
@@ -27,18 +28,11 @@ class Home extends Component {
     }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   let {actions, location: {token, action}} = nextProps;
-  //   if (token) {
-  //     typeof(actions[action]) == "function" && actions[action]({token});
-  //   }
-  // }
-
   render() {
     let {actions, children, userProfile} = this.props;
     return (
       <div>
-        <Header userProfile={userProfile} toggle={actions.toggle}/>
+        <Header userProfile={userProfile} actions={actions}/>
         <Auth />
         <Dialog />
         {children}
@@ -55,9 +49,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({
     toggle,
-    setPasswordToken,
-    openConfirmEmailDialog,
-    verifyUser
+    verifyUser,
+    push: (route) => push(route)
   }, dispatch)
 });
 

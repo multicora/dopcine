@@ -1,4 +1,5 @@
-@value primary: rgba(0, 0, 0, 0.9) !important;
+@value primary: transparent !important;
+@value secondary: rgba(0, 0, 0, 0.9) !important;
 
 :global(body){
   margin: 0;
@@ -10,4 +11,9 @@
 
 .header {
   composes: common;
+}
+
+.rightActions {
+  display: flex;
+  align-items: center;
 }
