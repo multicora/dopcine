@@ -60,7 +60,7 @@ module.exports = function (server, DAL) {
       handler: function (request, reply) {
         const token = request.payload.token;
 
-        usersController.verifyUser(token).then((user) => {
+        usersController.getUserByToken(token).then((user) => {
           reply(user);
         }).catch((err) => {
           if (err.type === 401) {

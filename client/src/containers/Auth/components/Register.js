@@ -15,7 +15,6 @@ const Login = props => {
         hintText="First name"
         floatingLabelText="First name"
         errorText={props.requestError || props.error}
-        value={props.firstName || ""}
         onChange={ props.onChange || (() => {}) }
         pattern={/^[a-zA-Z0-9]{2,}$/}
         required/>
@@ -25,7 +24,6 @@ const Login = props => {
         hintText="Last Name"
         floatingLabelText="Last Name"
         errorText={props.error}
-        value={props.lastName || ""}
         onChange={ props.onChange || (() => {}) }
         pattern={/^[a-zA-Z0-9]{6,}$/}
         required/>
@@ -35,7 +33,6 @@ const Login = props => {
         hintText="Email"
         floatingLabelText="Email"
         errorText={props.error}
-        value={props.email || ""}
         onChange={ props.onChange || (() => {}) }
         pattern={/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/}
         required/>
@@ -45,7 +42,6 @@ const Login = props => {
         hintText="Password"
         floatingLabelText="Password"
         errorText={props.error}
-        value={props.password || ""}
         onChange={ props.onChange || (() => {}) }
         pattern={/^[a-zA-Z0-9]{6,}$/}
         required/>
@@ -55,7 +51,6 @@ const Login = props => {
         hintText="Confirm password"
         floatingLabelText="Confirm password"
         errorText={props.error}
-        value={props.confirmPassword || ""}
         onChange={ props.onChange || (() => {}) }
         pattern={/^[a-zA-Z0-9]{6,}$/}
         required/>

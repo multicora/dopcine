@@ -16,7 +16,6 @@ const Login = props => {
           hintText="Email"
           floatingLabelText="Email"
           errorText={props.requestError || props.error}
-          value={props.email || ""}
           onChange={ props.onChange || (() => {}) }
           pattern={/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/}
           required/>
@@ -26,7 +25,6 @@ const Login = props => {
           hintText="Password"
           floatingLabelText="Password"
           errorText={props.error}
-          value={props.password || ""}
           onChange={ props.onChange || (() => {}) }
           pattern={/^[a-zA-Z0-9]{6,}$/}
           required/>

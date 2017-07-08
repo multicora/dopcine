@@ -13,23 +13,48 @@ function makeMaterial(WrappedComponent) {
       onFormChange: PropTypes.func
     };
 
-    static defaultProps = {
-      value: ""
-    }
-
-    constructor(props) {
+    constructor(props, context) {
       super(props);
 
-      this.state = {};
+      this.state = {
+        value: props.value || "",
+        isDirty: props.isDirty || false
+      };
     }
 
     componentWillMount() {
       typeof(this.context.onFormChange) === "function"
-        && this.context.onFormChange({ name: this.props.name, isValid: !this.__getFormError(this.props, this.props.value) });
+        && this.context.onFormChange({
+          name: this.props.name,
+          isValid: !this.__getFormError(this.props, this.state.value),
+          isDirty: false,
+          ...(!!this.state.value ? {value: this.state.value} : {})
+        });
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+      typeof(this.context.onFormChange) === "function"
+        && this.context.onFormChange({
+          name: this.props.name,
+          isValid: !this.__getFormError(this.props, nextState.value),
+          isDirty: nextState.isDirty,
+          ...(!!nextState.value ? {value: nextState.value} : {})
+        });
+    }
+
+    componentWillReceiveProps(nextProps, nextState) {
+      if ((!!this.state.isDirty !== !!nextProps.isDirty && nextProps.isDirty !== undefined)
+        || (this.state.value !== nextProps.value && nextProps.value !== undefined)) {
+        this.setState({
+          isDirty: nextProps.isDirty,
+          value: nextProps.value || ""
+        });
+      }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
       return nextProps.errorText !== this.props.errorText
+        || nextState.isDirty !== this.state.isDirty
         || nextState.value !== this.state.value;
     }
 
@@ -38,17 +63,15 @@ function makeMaterial(WrappedComponent) {
         && this.context.onFormUnmount({ name: this.props.name });
     }
 
-    __onChange(e) {
-      let target = e.target;
-      let error = this.__getFormError(this.props, e.target.value);
+    __onChange(e, index, value) {
+      // treat as select if value is present, as input otherwise
+      const newValue = value || e.target.value;
 
-      typeof(this.context.onFormChange) === "function"
-        && this.context.onFormChange({ name: target.name, isValid: !error, value: target.value });
-      this.setState({ error: error, value: target.value });
+      this.setState({ value: newValue, isDirty: true });
     }
 
     __getFormError(props, value) {
-      let validations = {
+      const validations = {
         required: !props.required || (props.required && !!value),
         pattern: !props.pattern || (!!props.pattern && (props.pattern).test(value))
       };
@@ -57,14 +80,16 @@ function makeMaterial(WrappedComponent) {
     }
 
     render() {
-      let { error, value } = this.state;
-      let { errorText} = this.props;
+      const { value, isDirty } = this.state;
+      const { errorText} = this.props;
+
+      const error = this.__getFormError(this.props, value);
 
       return <WrappedComponent
         {...this.props}
         value={value}
         onChange={ this.__onChange.bind(this) }
-        errorText={ errorText || error }
+        errorText={ isDirty && (errorText || error) }
       />;
     }
   }

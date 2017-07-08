@@ -2,4 +2,4 @@
 
 server/coverage/
 
-server/userConfig.js
+server/src/userConfig.js

@@ -47,9 +47,9 @@ export default (state = initialState, action) => {
       });
 
     case REQUEST_COMPLETED:
-      return initialState.set({
-        requestMessage: action.requestMessage || ""
-      });
+      return initialState.set(
+        "requestMessage", action.requestMessage || ""
+      );
 
     case REQUEST_FAILED:
       return state.merge({
@@ -69,20 +69,16 @@ export default (state = initialState, action) => {
 }
 
 export const toggle = (data) => {
-  return dispatch => {
-    dispatch({
-      type: TOGGLE_VISIBILITY,
-      ...(data.hasOwnProperty("isOpen") ? {isOpen: data.isOpen} : {})
-    });
+  return {
+    type: TOGGLE_VISIBILITY,
+    ...(data.hasOwnProperty("isOpen") ? {isOpen: data.isOpen} : {})
   };
 };
 
 export const selectTab = (value) => {
-  return dispatch => {
-    dispatch({
-      type: SELECT_TAB,
-      value
-    });
+  return {
+    type: SELECT_TAB,
+    value
   };
 };
 
@@ -141,14 +137,11 @@ export const login = ({email, password}) => {
 
 
 export const setPasswordToken = ({token}) => {
-
-  return dispatch => {
-    dispatch({
-      type: SET_PASSWORD_TOKEN,
-      open: true,
-      selectedTab: "setPassword",
-      setPasswordToken: token
-    });
+  return {
+    type: SET_PASSWORD_TOKEN,
+    open: true,
+    selectedTab: "setPassword",
+    setPasswordToken: token
   };
 };
 
@@ -209,15 +202,13 @@ export const resetPassword = ({email}) => {
 };
 
 export const openConfirmEmailDialog = ({token}) => {
-  return dispatch => {
-    dispatch({
-      type: TOGGLE_DIALOG_VISIBILITY,
-      message: "Confirming email...",
-        loaderIcon: "action.loaderIcon",
-        onOpen: "confirmEmail",
-        onOpenProps: {token}
-    });
-  }
+  return {
+    type: TOGGLE_DIALOG_VISIBILITY,
+    message: "Confirming email...",
+      loaderIcon: "action.loaderIcon",
+      onOpen: "confirmEmail",
+      onOpenProps: {token}
+  };
 };
 
 export const confirmEmail = ({token}) => {

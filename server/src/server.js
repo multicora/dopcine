@@ -22,7 +22,7 @@ module.exports = function () {
   let dal = registerDAL(db);
   let server = startServer();
 
-  migrations(dal).then( () => {
+  migrations(dal, db).then( () => {
     return registerLoging(server);
   }).then( () => {
     return registerDocumentation(server);
@@ -99,9 +99,9 @@ function startServer(tls) {
   return server;
 }
 
-function migrations(DAL) {
+function migrations(DAL, connection) {
   const migrations = require('./migrations/migrations.js');
-  return migrations(DAL);
+  return migrations(DAL, connection);
 }
 
 function registerStaticFilesServer(server) {
