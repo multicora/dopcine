@@ -2,8 +2,8 @@ import { fromJS } from "immutable";
 import { createSelector } from "reselect";
 import BasketService from "services/basket";
 
-export const TOGGLE_VISIBILITY = "files/TOGGLE_VISIBILITY";
-export const SET_ITEMS = "files/SET_ITEMS";
+export const TOGGLE_VISIBILITY = "basket/TOGGLE_VISIBILITY";
+export const SET_ITEMS = "basket/SET_ITEMS";
 
 const initialState = fromJS({
   isBasketActive: false,

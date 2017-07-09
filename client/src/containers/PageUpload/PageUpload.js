@@ -232,6 +232,7 @@ class PageUpload extends Component {
               floatingLabelText="Currency"
               defaultValue={1}
               value={ formValues.currency }
+              required
             >
               { currencyOptions }
             </MaterialSelect>

@@ -17,7 +17,7 @@ function makeMaterial(WrappedComponent) {
       super(props);
 
       this.state = {
-        value: props.value || "",
+        value: props.value ? props.value : props.defaultValue || "",
         isDirty: props.isDirty || false
       };
     }
@@ -64,7 +64,8 @@ function makeMaterial(WrappedComponent) {
     shouldComponentUpdate(nextProps, nextState) {
       return nextProps.errorText !== this.props.errorText
         || nextState.isDirty !== this.state.isDirty
-        || nextState.value !== this.state.value;
+        || nextState.value !== this.state.value
+        || nextProps.value !== this.state.value;
     }
 
     componentWillUnmount() {

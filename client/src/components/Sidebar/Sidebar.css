@@ -1,0 +1,28 @@
+.menuItemContainer {
+  color: #757575;
+  text-decoration: none;
+}
+
+.menuItem {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  height: 55px;
+  padding: 16px 24px;
+  letter-spacing: 0;
+  opacity: .87;
+}
+
+.menuHeader {
+  composes: menuItem;
+}
+
+.menuIcon {
+  padding-right: 10px;
+  color: #757575 !important;
+}
+
+.menuText {
+  font-size: 14px;
+  font-weight: 400;
+}

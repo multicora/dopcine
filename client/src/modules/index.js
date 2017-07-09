@@ -8,6 +8,7 @@ import dialog from "./dialog";
 import session from "./session";
 import files from "./files";
 import basket from "./basket";
+import layout from "./layout";
 
 export default combineReducers({
   routing: routerReducer,
@@ -15,5 +16,6 @@ export default combineReducers({
   dialog,
   session,
   files,
-  basket
+  basket,
+  layout
 });

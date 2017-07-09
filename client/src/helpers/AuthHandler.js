@@ -1,28 +1,26 @@
-import React, {Component} from "react";
+import { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
 import { loadItem } from "helpers/localStorage";
-import Auth from "containers/Auth/Auth";
-import Dialog from "components/Dialog/Dialog";
-import Header from "./components/Header/Header";
-
-import { toggle, logout } from "modules/auth";
+import { toggle, openConfirmEmailDialog, setPasswordToken } from "modules/auth";
 import { verifyUser, selectors } from "modules/session";
 
-class Home extends Component {
+class AuthHandler extends Component {
 
   componentWillMount() {
-    // veryfy user using token form localStorage
-    const {actions} = this.props;
+    const { actions } = this.props;
     const sessionToken = loadItem("token");
+
+    // veryfy user using token form localStorage
     sessionToken && typeof(actions.verifyUser) === "function"
       && actions.verifyUser({token: sessionToken});
   }
 
   componentDidUpdate() {
+    const { actions, location: {token, action, from: redirect}, isUserLogged } = this.props;
+
     // trigger actins on redirect with token
-    const {actions, location: {token, action}, isUserLogged} = this.props;
     if ((token || action) && !isUserLogged) {
       typeof(actions[action]) === "function" && actions[action]({token});
       return;
@@ -30,19 +28,13 @@ class Home extends Component {
       const sessionToken = loadItem("token");
       sessionToken && typeof(actions.verifyUser) === "function"
         && actions.verifyUser({token: sessionToken})
+    } else if ( isUserLogged && redirect) {
+      actions.push(redirect);
     }
   }
 
   render() {
-    let {actions, children, userProfile} = this.props;
-    return (
-      <div>
-        <Header userProfile={userProfile} actions={actions}/>
-        <Auth />
-        <Dialog />
-        {children}
-      </div>
-    );
+    return (null);
   }
 };
 
@@ -55,9 +47,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({
-    toggle,
-    logout,
     verifyUser,
+    openConfirmEmailDialog,
+    setPasswordToken,
+    toggle,
     push: (route) => push(route)
   }, dispatch)
 });
@@ -65,4 +58,4 @@ const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Home);
+)(AuthHandler);
