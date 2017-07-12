@@ -1,0 +1,46 @@
+.item {
+  padding: 25px;
+  display: flex;
+  min-height: 70px;
+  border-bottom: 1px solid #CCC;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.itemName {
+  height: 2.5rem;
+  overflow-y: hidden;
+  font-size: 1.3rem;
+  line-height: 2.5rem;
+}
+
+.itemPrice {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.imgContainer {
+  width: 100px;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.img {
+  height: auto;
+  width: 100%;
+}
+
+.delete {
+  display: flex;
+  align-items: center;
+}
+
+.deleteIcon {
+  color: rgba(0, 0, 0, .58) !important;
+}

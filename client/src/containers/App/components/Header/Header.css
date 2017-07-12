@@ -1,0 +1,22 @@
+@value primary: transparent !important;
+@value secondary: rgba(0, 0, 0, 0.9) !important;
+
+:global(body){
+  margin: 0;
+}
+
+.common {
+  background-color: primary;
+}
+
+.header {
+  composes: common;
+}
+
+.rightActions {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-bottom: 8px;
+  box-sizing: border-box;
+}

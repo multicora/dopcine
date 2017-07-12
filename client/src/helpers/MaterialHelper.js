@@ -17,7 +17,7 @@ function makeMaterial(WrappedComponent) {
       super(props);
 
       this.state = {
-        value: props.value || "",
+        value: props.value ? props.value : props.defaultValue || "",
         isDirty: props.isDirty || false
       };
     }
@@ -28,7 +28,12 @@ function makeMaterial(WrappedComponent) {
           name: this.props.name,
           isValid: !this.__getFormError(this.props, this.state.value),
           isDirty: false,
-          ...(!!this.state.value ? {value: this.state.value} : {})
+          ...(!!this.state.value
+                ? {value: this.state.value}
+                : this.props.defaultValue
+                  ? {value: this.props.defaultValue}
+                  : {}
+              )
         });
     }
 
@@ -47,7 +52,11 @@ function makeMaterial(WrappedComponent) {
         || (this.state.value !== nextProps.value && nextProps.value !== undefined)) {
         this.setState({
           isDirty: nextProps.isDirty,
-          value: nextProps.value || ""
+          value: nextProps.value
+            ? nextProps.value
+            : this.props.defaultValue
+              ? this.props.defaultValue
+              : ""
         });
       }
     }
@@ -55,7 +64,8 @@ function makeMaterial(WrappedComponent) {
     shouldComponentUpdate(nextProps, nextState) {
       return nextProps.errorText !== this.props.errorText
         || nextState.isDirty !== this.state.isDirty
-        || nextState.value !== this.state.value;
+        || nextState.value !== this.state.value
+        || nextProps.value !== this.state.value;
     }
 
     componentWillUnmount() {
@@ -82,11 +92,13 @@ function makeMaterial(WrappedComponent) {
     render() {
       const { value, isDirty } = this.state;
       const { errorText} = this.props;
-
       const error = this.__getFormError(this.props, value);
 
+      let props = Object.assign({}, this.props);
+      delete props.isDirty;
+
       return <WrappedComponent
-        {...this.props}
+        {...props}
         value={value}
         onChange={ this.__onChange.bind(this) }
         errorText={ isDirty && (errorText || error) }

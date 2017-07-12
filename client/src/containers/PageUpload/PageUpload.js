@@ -230,13 +230,16 @@ class PageUpload extends Component {
               name="currency"
               className={ styles.currencyInput }
               floatingLabelText="Currency"
-              value={ formValues.currency || 1 }
+              defaultValue={1}
+              value={ formValues.currency }
+              required
             >
               { currencyOptions }
             </MaterialSelect>
           </div>
           <div className={ styles.descriptionInput }>
             <MaterialTextField
+              isDirty={dirtyObject.description}
               className={ styles.descriptionTextField }
               fullWidth
               floatingLabelText="Add description"
@@ -249,6 +252,7 @@ class PageUpload extends Component {
           </div>
           <div className={ styles.keywordsInput }>
             <MaterialInput
+              isDirty={dirtyObject.keywords}
               fullWidth
               id="keywords"
               name="keywords"
@@ -261,6 +265,7 @@ class PageUpload extends Component {
           <div className={ styles.ownerInput }>
             <MaterialInput
               fullWidth
+              isDirty={dirtyObject.owner}
               id="owner"
               name="owner"
               hintText="Owner"
@@ -277,13 +282,13 @@ class PageUpload extends Component {
               labelPosition="right"/>
           </div>
           <RaisedButton
-            onClick={ this.__onFormSubmit.bind(this) }
+            onTouchTap={ this.__onFormSubmit.bind(this) }
             disabled={ !isFormValid && isFormDirty }
             className={ styles.saveBtn }
             label="save"
             primary={true}/>
           <RaisedButton
-            onClick={ this.__onFormSubmit.bind(this, {isPublished: true}) }
+            onTouchTap={ this.__onFormSubmit.bind(this, {isPublished: true}) }
             disabled={ !isFormValid && isFormDirty }
             label="publish"
             secondary={true}/>

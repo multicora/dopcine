@@ -2,12 +2,14 @@ import {Map} from "immutable";
 import { createSelector } from "reselect";
 
 import SessionService from "services/session";
-import {loadItem, saveItem} from "helpers/localStorage";
+import {saveItem} from "helpers/localStorage";
 export const ON_LOGIN = "session/ON_LOGIN";
 export const SAVE_USER_PROFILE = "session/SAVE_USER_PROFILE";
+export const VERIFYING_IN_PROGRESS = "session/VERIFYING_IN_PROGRESS";
 
 const initialState = Map({
-  token: !!loadItem("token"),
+  isLogging: false,
+  isUserLogged: false,
   user: false
 });
 
@@ -15,12 +17,20 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case ON_LOGIN:
       saveItem("token", action.token)
-      return state.set({
-        token: !!action.token
+      return state.merge({
+        isUserLogged: !!action.token,
+        isLogging: false
       });
 
+    case VERIFYING_IN_PROGRESS:
+      return state.set("isLogging", true);
+
     case SAVE_USER_PROFILE:
-      return state.set("user", action.user);
+      return state.merge({
+        user: action.user,
+        isLogging: false,
+        isUserLogged: true
+      });
 
     default:
       return state;
@@ -29,6 +39,7 @@ export default (state = initialState, action) => {
 
 export const verifyUser = ({token}) => {
   return dispatch => {
+    dispatch({type: VERIFYING_IN_PROGRESS});
     return SessionService.verifyUser({token})
       .then(response => {
         if (response.error) {

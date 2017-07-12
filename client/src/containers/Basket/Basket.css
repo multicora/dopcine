@@ -1,0 +1,60 @@
+.dialog {
+  padding: 10px 20px 20px 20px;
+}
+
+.title {
+  font-size: 2rem !important;
+  font-weight: 300 !important;
+  padding: 35px 10px 20px 35px !important;
+}
+
+.subtitle {
+  font-size: 0.8em;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #CCC;
+}
+
+.body {
+  padding: 5px 45px 0px 45px !important;
+  max-height: 500px !important;
+}
+
+.total {
+  line-height: 45px;
+  text-align: right;
+  padding-right: 5px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.actions {
+  padding: 20px !important;
+}
+
+.actionItem {
+  margin-left: 10px !important;
+}
+
+.iconContainer {
+  display:inline-block;
+  position: relative;
+}
+
+.qauntity {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgb(255,64,129);
+  color: rgb(255,255,255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
